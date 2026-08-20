@@ -46,38 +46,74 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('$title')
+        title: Text(title)
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              '目前樓層:',
-            ),
-            Text(
-              '1',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Row(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(20),
+                color: Colors.black54,
+                child: Text('1', textAlign: TextAlign.center)
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text('B2'),
-                Text('B1'),
-                Text('1'),
-                Text('2'),
-                Text('3'),
-                Text('4'),
-                Text('5'),
-              ]),
-            const Row(
-              children: <Widget>[
-                Text('開門'),
-                Text('關門')
-              ],
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _getButtonContainer('5')),
+                    const SizedBox(width: 3),
+                    const Spacer()
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _getButtonContainer('3')),
+                    const SizedBox(width: 3),
+                    Expanded(child: _getButtonContainer('4'))
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _getButtonContainer('1')),
+                    const SizedBox(width: 3),
+                    Expanded(child: _getButtonContainer('2'))
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _getButtonContainer('B1')),
+                    const SizedBox(width: 3),
+                    Expanded(child: _getButtonContainer('B2'))
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _getButtonContainer('開門')),
+                    const SizedBox(width: 3),
+                    Expanded(child: _getButtonContainer('關門'))
+                  ],
+                )
+              ]
             )
-          ]
-        ),
+          )
+        ]
       )
     );
   }
+}
+
+Container _getButtonContainer(String btnText) {
+  return Container(
+    padding: const EdgeInsets.all(10),
+    color: Colors.black26,
+    child: Text(btnText, textAlign: TextAlign.center)
+  );
 }
