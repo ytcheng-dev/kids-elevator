@@ -13,21 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -36,17 +21,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  Map<int, FloorButton> floorMap = {
+    -2: FloorButton(title: 'B2'),
+    -1: FloorButton(title: 'B1'),
+    0: FloorButton(title: '1'),
+    1: FloorButton(title: '2'),
+    2: FloorButton(title: '3'),
+    3: FloorButton(title: '4'),
+    4: FloorButton(title: '5')
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title)
+        title: Text(widget.title)
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -55,9 +54,9 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 color: Colors.black54,
-                child: Text('1', textAlign: TextAlign.center)
+                child: const Text('1', textAlign: TextAlign.center)
               )
             ],
           ),
@@ -68,37 +67,37 @@ class MyHomePage extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Expanded(child: _getButtonContainer('5')),
+                    Expanded(child: _getFloorButtonGestureDetector(4)),
                     const SizedBox(width: 3),
                     const Spacer()
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Expanded(child: _getButtonContainer('3')),
+                    Expanded(child: _getFloorButtonGestureDetector(2)),
                     const SizedBox(width: 3),
-                    Expanded(child: _getButtonContainer('4'))
+                    Expanded(child: _getFloorButtonGestureDetector(3))
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Expanded(child: _getButtonContainer('1')),
+                    Expanded(child: _getFloorButtonGestureDetector(0)),
                     const SizedBox(width: 3),
-                    Expanded(child: _getButtonContainer('2'))
+                    Expanded(child: _getFloorButtonGestureDetector(1))
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Expanded(child: _getButtonContainer('B1')),
+                    Expanded(child: _getFloorButtonGestureDetector(-1)),
                     const SizedBox(width: 3),
-                    Expanded(child: _getButtonContainer('B2'))
+                    Expanded(child: _getFloorButtonGestureDetector(-2))
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    Expanded(child: _getButtonContainer('開門')),
+                    Expanded(child: _getActionButtonDetector('開門')),
                     const SizedBox(width: 3),
-                    Expanded(child: _getButtonContainer('關門'))
+                    Expanded(child: _getActionButtonDetector('關門'))
                   ],
                 )
               ]
@@ -108,12 +107,40 @@ class MyHomePage extends StatelessWidget {
       )
     );
   }
+
+  GestureDetector _getFloorButtonGestureDetector(int btnIndex) {
+    FloorButton myFloor = floorMap[btnIndex]!;
+
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        color: myFloor.isTarget ? Colors.yellow : Colors.black26,
+        child: Text(myFloor.title, textAlign: TextAlign.center)
+      ),
+      onTap: () {
+        setState(() {
+          myFloor.isTarget = !myFloor.isTarget;
+        });
+        print(myFloor.title);
+      }
+    );
+  }
+
+  GestureDetector _getActionButtonDetector(String btnText) {
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        color: Colors.black26,
+        child: Text(btnText, textAlign: TextAlign.center)
+      ),
+      onTap: () => print(btnText)
+    );
+  }
 }
 
-Container _getButtonContainer(String btnText) {
-  return Container(
-    padding: const EdgeInsets.all(10),
-    color: Colors.black26,
-    child: Text(btnText, textAlign: TextAlign.center)
-  );
+class FloorButton {
+    FloorButton({required this.title});  // contructer
+
+    final String title;
+    bool isTarget = false;  // 初始為未選取
 }
