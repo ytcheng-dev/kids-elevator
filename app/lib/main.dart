@@ -50,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -70,60 +72,70 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(child: _getFloorButtonGestureDetector(4)),
-                    const SizedBox(width: 3),
-                    const Spacer()
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: _getFloorButtonGestureDetector(2)),
-                    const SizedBox(width: 3),
-                    Expanded(child: _getFloorButtonGestureDetector(3))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: _getFloorButtonGestureDetector(0)),
-                    const SizedBox(width: 3),
-                    Expanded(child: _getFloorButtonGestureDetector(1))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: _getFloorButtonGestureDetector(-1)),
-                    const SizedBox(width: 3),
-                    Expanded(child: _getFloorButtonGestureDetector(-2))
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: _getActionButtonDetector(ActionButton(title: '開門', btnType: ActionType.open))),
-                    const SizedBox(width: 3),
-                    Expanded(child: _getActionButtonDetector(ActionButton(title: '關門', btnType: ActionType.close)))
-                  ],
-                )
-              ]
+            child: Padding( 
+              padding: const EdgeInsets.only(
+                left: 5,
+                right: 5
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), screenWidth),
+                      SizedBox(width: screenWidth * CSSManager.buttonWidthPercent),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), screenWidth),
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), screenWidth),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), screenWidth),
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), screenWidth),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), screenWidth),
+                      CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), screenWidth),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      CSSManager.getButtonBox(_getActionButtonDetector(ActionButton(title: '開門', btnType: ActionType.open)), screenWidth),
+                      CSSManager.getButtonBox(_getActionButtonDetector(ActionButton(title: '關門', btnType: ActionType.close)), screenWidth),
+                    ],
+                  )
+                ]
+              )
             )
           )
         ]
       )
     );
   }
-
+  
   GestureDetector _getFloorButtonGestureDetector(int btnIndex) {
     FloorButton myFloor = floorMap[btnIndex]!;
 
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.all(10),
-        color: myFloor.isTarget ? Colors.yellow : Colors.black26,
-        child: Text(myFloor.title, textAlign: TextAlign.center)
+        decoration: CSSManager.buttonDecoration(myFloor.isTarget),
+        child: Text(
+          myFloor.title, 
+          textAlign: TextAlign.center,
+          style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack)
+        )
       ),
       onTap: () {
         setState(() {
@@ -166,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onLongPressEnd: actButton.btnType == ActionType.close ? null : doOpenLongPressEnd,
       child: Container(
         padding: const EdgeInsets.all(10),
-        color: Colors.black26,
+        decoration: CSSManager.buttonDecoration(false),
         child: Text(actButton.title, textAlign: TextAlign.center)
       ),
     );
@@ -378,8 +390,6 @@ class Elevator {
   int currentFloor = 0;   // 初始樓層: 1 樓
   bool isStartLongPress = false;  // 開門鍵是否長按中
 
-  int countForClose = 0;  // 關門讀秒
-
   DateTime? openedAt;   // 門開啟時間點
 }
 
@@ -433,4 +443,33 @@ class ActionButton {
 
   final String title;
   final ActionType btnType;
+}
+
+class CSSManager {
+  static const Color backgroundGray = Color(0xFFCCC3CD);
+  static const Color defaultBlack = Color(0xFF757382);
+  static const Color highlight = Color(0xFFAD6777);
+
+  static const double buttonWidthPercent = 0.35;    // 按鈕的寬度 (螢幕寬度百分比)
+
+  static BoxDecoration buttonDecoration(bool isHighlight) {
+    return BoxDecoration(
+      color: backgroundGray,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        color: isHighlight ? highlight : defaultBlack,
+        width: 3
+      )
+    );
+  }
+
+  static SizedBox getButtonBox(GestureDetector btn, double screenWidth) {
+    return SizedBox(
+      width: screenWidth * CSSManager.buttonWidthPercent,
+      child: AspectRatio(
+        aspectRatio: 1.5,
+        child: btn
+      )
+    );
+  }
 }
