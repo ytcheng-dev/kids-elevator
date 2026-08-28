@@ -198,11 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
           if (elevator.direction == Direction.idle) {
             // 電梯行進方向
             if (elevator.currentFloor > btnIndex) {
-              elevator.direction = Direction.down;
               goDownFloor();
             }
             else if (elevator.currentFloor < btnIndex) {
-              elevator.direction = Direction.up;
               goUpFloor();
             }
             // if elevator.currentFloor == btnIndex, then elevator.direction always idle
@@ -265,6 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elevator.currentFloor < maxFloor && hasTarget(elevator.currentFloor, Direction.up)) {
       // 可上樓 且 上方有樓層要前往 => 前進一個樓層
       setState(() {
+        elevator.direction = Direction.up;
         elevator.lastDirection = Direction.up;
       });
       
@@ -280,6 +279,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elevator.currentFloor > minFloor && hasTarget(elevator.currentFloor, Direction.down)) {
       // 可下樓 且 下方有樓層要前往 => 像下一個樓層
       setState(() {
+        elevator.direction = Direction.down;
         elevator.lastDirection = Direction.down;
       });
       
