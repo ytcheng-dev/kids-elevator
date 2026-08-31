@@ -1,7 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
+
+import 'models/board_button.dart';
+import 'models/elevator.dart';
+import 'models/enums.dart';
+import 'models/timer_manager.dart';
+
+import 'styles/css_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -476,7 +482,11 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           // 樓層的標記變更
           myFloor.isTarget = !myFloor.isTarget;
 
-          if (elevator.direction == Direction.idle) {
+          print(elevator.direction);
+          print(elevator.doorStatus);
+          print(elevator.currentFloor);
+
+          if (elevator.direction == Direction.idle && elevator.doorStatus == DoorStatus.closed) {
             // 電梯行進方向
             if (elevator.currentFloor > btnIndex) {
               goDownFloor();
@@ -488,6 +498,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               // if elevator.currentFloor == btnIndex, then elevator.direction always idle
               myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
             }
+          }
+          else if (elevator.direction == Direction.idle && elevator.currentFloor == btnIndex) {
+            myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
           }
 
         });
@@ -768,108 +781,5 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       }
       // 如果還沒有完成就觸發 LongPressEnd, 應該會值行正常的預設倒數關門
     }
-  }
-}
-
-enum Direction {down, idle, up}
-enum DoorStatus {closed, closing, opening, open}
-enum ActionType {open, close}
-enum TimerType {doorProc, moveFloor, openWaiting, longPressOpen}
-enum ScreenIcon {up, down, left, right}
-
-class Elevator {
-  Direction direction = Direction.idle; // 初始方向：等待
-  Direction lastDirection = Direction.up;  // 最後一次行動方向
-  DoorStatus doorStatus = DoorStatus.closed; // 初始門狀態: 已關閉
-  int currentFloor = 0;   // 初始樓層: 1 樓
-  bool isStartLongPress = false;  // 開門鍵是否長按中
-
-  DateTime? openedAt;   // 門開啟時間點
-}
-
-class TimerManager {
-  static const int doorProcTime = 3;    // 開關門執行時間
-  static const int floorTime = 2;       // 樓層移動時間
-  static const int openWaitingTime = 5; // 開門後等待時間
-  static const int longPressOpenTime = 2; // 長按開門後等待關門的時間
-
-  Timer? _pendingTimer;
-
-  void startTimer(TimerType type, void Function() cb) {
-    clear();
-
-    switch(type) {
-      case TimerType.doorProc:
-        _pendingTimer = Timer(const Duration(seconds: TimerManager.doorProcTime), cb);
-      break;
-      case TimerType.moveFloor:
-        _pendingTimer = Timer(const Duration(seconds: TimerManager.floorTime), cb);
-      break;
-      case TimerType.openWaiting:
-        _pendingTimer = Timer(const Duration(seconds: TimerManager.openWaitingTime), cb);
-      break;
-      case TimerType.longPressOpen:
-        _pendingTimer = Timer(const Duration(seconds: TimerManager.longPressOpenTime), cb);
-      break;
-    }
-  }
-
-  void startSelfTimer(Duration duration, void Function() cb) {
-    clear();
-
-    _pendingTimer = Timer(duration, cb);
-  }
-
-  void clear() {
-      _pendingTimer?.cancel();
-  }
-}
-
-class FloorButton {
-    FloorButton({required this.title});  // contructer
-
-    final String title;
-    bool isTarget = false;  // 初始為未選取
-}
-
-class ActionButton {
-  // constructor
-  ActionButton({required this.title, required this.btnType, required this.iconCode});
-
-  final String title;
-  final IconData iconCode;
-  final ActionType btnType;
-
-  bool isPressed = false;
-}
-
-class CSSManager {
-  static const Color backgroundGray = Color(0xFFCCC3CD);
-  static const Color defaultBlack = Color(0xFF757382);
-  static const Color highlight = Color(0xFFAD6777);
-  static const Color screenText = Color(0xFFC35C5E);
-
-  static const double shortSidePercent = 0.35;    // 按鈕的寬邊 (百分比)
-  static const double longSidePercent = 0.18;   // 按鈕的長邊(百分比)
-
-  static BoxDecoration buttonDecoration(bool isHighlight) {
-    return BoxDecoration(
-      color: backgroundGray,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: isHighlight ? highlight : defaultBlack,
-        width: 3
-      )
-    );
-  }
-
-  static SizedBox getButtonBox(Widget btn, double width) {
-    return SizedBox(
-      width: width,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: btn
-      )
-    );
   }
 }
