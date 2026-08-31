@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -55,43 +57,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    Orientation orientation = MediaQuery.of(context).orientation;
 
+    if (orientation == Orientation.portrait) {
+      return _buildPortraitBody(context);
+    }
+    else {
+      return _buildLandscapeBody(context);
+    }
+  }
+
+  AppBar _mainAppBar(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 48,
+      backgroundColor: Colors.transparent,
+      elevation: 0,   // 分隔線陰影
+      // title: Text(widget.title)
+    );
+  }
+
+  Widget _buildPortraitBody(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title)
-      ),
+      appBar: _mainAppBar(context),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              width: screenWidth * CSSManager.floorScreenWidthPercent,
-              child: AspectRatio(
-                aspectRatio: 2,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      _getDirectionIcon(),
-                      Expanded(
-                        child: Text(
-                          floorMap[elevator.currentFloor]!.title, 
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: CSSManager.floorText, fontSize: 72)
-                        )
-                      )
-                    ],
-                  )
-                ),
-              )
-            ),
+            LayoutBuilder(builder: _portraitFloorScreen),
             const SizedBox(height: 10),
             Expanded(
               child: Padding( 
@@ -99,57 +92,212 @@ class _MyHomePageState extends State<MyHomePage> {
                   left: 5,
                   right: 5
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), screenWidth),
-                        SizedBox(width: screenWidth * CSSManager.buttonWidthPercent),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), screenWidth),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), screenWidth),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), screenWidth),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CSSManager.getButtonBox(
-                          _getActionButton(actionMap[ActionType.open]!), 
-                          screenWidth
-                        ),
-                        CSSManager.getButtonBox(
-                          _getActionButton(actionMap[ActionType.close]!), 
-                          screenWidth
-                        ),
-                      ],
+                child: LayoutBuilder(
+                        builder: _portraitButtonGrpBuiler
                     )
-                  ]
-                )
               )
             )
           ]
         )
       )
+    );
+  }
+
+  Widget _portraitFloorScreen(BuildContext context, BoxConstraints constraints) {
+    double maxWidth = constraints.maxWidth;
+
+    return SizedBox(
+      width: maxWidth,
+      child: AspectRatio(
+          aspectRatio: 2,
+          child: _mainFloorScreen(),
+        )
+    );
+  }
+
+  Widget _portraitButtonGrpBuiler(BuildContext context, BoxConstraints constraints) {
+    double maxWidth = constraints.maxWidth;
+    double maxHeight = constraints.maxHeight;
+
+    double btnWidth = maxWidth * CSSManager.shortSidePercent,
+           btnHeight = maxHeight * CSSManager.longSidePercent,
+           btnSize = min(btnWidth, btnHeight);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            SizedBox(width: btnSize),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(
+              _getActionButton(actionMap[ActionType.open]!), 
+              btnSize
+            ),
+            CSSManager.getButtonBox(
+              _getActionButton(actionMap[ActionType.close]!), 
+              btnSize
+            ),
+          ],
+        )
+      ]
+    );
+  }
+
+  Widget _buildLandscapeBody(BuildContext context) {
+    return Scaffold(
+      // appBar: _mainAppBar(context),
+      body: Container(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            LayoutBuilder(builder: _landscapeFloorScreen),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: LayoutBuilder(builder: _landscapeButtonGrpBuilder)
+              )
+            )
+          ],
+        )
+      )
+    );
+  }
+
+  Widget _landscapeFloorScreen(BuildContext context, BoxConstraints constaints) {
+    double maxHeight = constaints.maxHeight,
+           floorScreenHeight = maxHeight * 0.7,
+           btnPaletHeight = maxHeight * 0.25,
+           screenAspectRatio = 1.5,
+           floorScreenWidth = floorScreenHeight * screenAspectRatio;
+
+    double btnSize = min(floorScreenWidth * 0.3, btnPaletHeight * 0.8);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        SizedBox(
+          height: floorScreenHeight,
+          child: AspectRatio(
+            aspectRatio: screenAspectRatio,
+            child: _mainFloorScreen()
+          )
+        ),
+        SizedBox(
+          height: btnPaletHeight,
+          width: floorScreenWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              CSSManager.getButtonBox(
+                _getActionButton(actionMap[ActionType.open]!), 
+                btnSize
+              ),
+              CSSManager.getButtonBox(
+                _getActionButton(actionMap[ActionType.close]!), 
+                btnSize
+              ),
+            ],
+          )
+        )
+      ],
+    );
+  }
+
+  Widget _mainFloorScreen() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.black
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          _getDirectionIcon(),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                floorMap[elevator.currentFloor]!.title, 
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: CSSManager.floorText, fontSize: 72)
+              )
+            )
+          )
+        ],
+      )
+    );
+  }
+
+  Widget _landscapeButtonGrpBuilder(BuildContext context, BoxConstraints constraints) {
+    double maxWidth = constraints.maxWidth;
+    double maxHeight = constraints.maxHeight;
+
+    double btnWidth = maxWidth * CSSManager.longSidePercent,
+           btnHeight = maxHeight * CSSManager.shortSidePercent,
+           btnSize = min(btnWidth, btnHeight);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+            SizedBox(height: btnSize),
+          ],
+        ),
+      ],
     );
   }
 
@@ -159,19 +307,25 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     else if (elevator.direction == Direction.up) {
       return const Expanded(
-        child: Icon(
-          Icons.arrow_upward,
-          color: Colors.green,
-          size: 96
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Icon(
+            Icons.arrow_upward,
+            color: Colors.green,
+            size: 96
+          )
         )
       );
     }
     else {
       return const Expanded(
-        child: Icon(
-          Icons.arrow_downward,
-          color: Colors.green,
-          size: 96
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Icon(
+            Icons.arrow_downward,
+            color: Colors.green,
+            size: 96
+          )
         )
       );
     }
@@ -182,12 +336,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return GestureDetector(
       child: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
         decoration: CSSManager.buttonDecoration(myFloor.isTarget),
-        child: Text(
-          myFloor.title, 
-          textAlign: TextAlign.center,
-          style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack, fontSize: 24)
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            myFloor.title, 
+            textAlign: TextAlign.center,
+            style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack, fontSize: 48)
+          )
         )
       ),
       onTap: () {
@@ -244,14 +402,18 @@ class _MyHomePageState extends State<MyHomePage> {
         onLongPressStart: actButton.btnType == ActionType.close ? null : doOpenLongPressStart,
         onLongPressEnd: actButton.btnType == ActionType.close ? null : doOpenLongPressEnd,
         child: Container(
+          alignment: Alignment.center,
           padding: const EdgeInsets.all(10),
           decoration: CSSManager.buttonDecoration(actButton.isPressed),
           child: RotatedBox(
             quarterTurns: 1,
-            child: Icon(
-              actButton.iconCode,
-              size: 48,
-              color: actButton.isPressed ? CSSManager.highlight : CSSManager.defaultBlack
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Icon(
+                actButton.iconCode,
+                size: 60,
+                color: actButton.isPressed ? CSSManager.highlight : CSSManager.defaultBlack
+              )
             )
           )
         ),
@@ -532,8 +694,8 @@ class CSSManager {
   static const Color highlight = Color(0xFFAD6777);
   static const Color floorText = Color(0xFFC35C5E);
 
-  static const double buttonWidthPercent = 0.35;    // 按鈕的寬度 (螢幕寬度百分比)
-  static const double floorScreenWidthPercent = 0.8;  // 樓層顯示區域寬度(螢幕寬度百分比)
+  static const double shortSidePercent = 0.35;    // 按鈕的寬邊 (百分比)
+  static const double longSidePercent = 0.18;   // 按鈕的長邊(百分比)
 
   static BoxDecoration buttonDecoration(bool isHighlight) {
     return BoxDecoration(
@@ -546,11 +708,11 @@ class CSSManager {
     );
   }
 
-  static SizedBox getButtonBox(Widget btn, double screenWidth) {
+  static SizedBox getButtonBox(Widget btn, double width) {
     return SizedBox(
-      width: screenWidth * CSSManager.buttonWidthPercent,
+      width: width,
       child: AspectRatio(
-        aspectRatio: 1.5,
+        aspectRatio: 1,
         child: btn
       )
     );
