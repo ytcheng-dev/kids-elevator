@@ -32,11 +32,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin{
   final int maxFloor = 4;
   final int minFloor = -2;
 
-  Map<int, FloorButton> floorMap = {
+  final Map<int, FloorButton> floorMap = {
     -2: FloorButton(title: 'B2'),
     -1: FloorButton(title: 'B1'),
     0: FloorButton(title: '1'),
@@ -46,14 +46,65 @@ class _MyHomePageState extends State<MyHomePage> {
     4: FloorButton(title: '5')
   };
 
-  Map<ActionType, ActionButton> actionMap = {
+  final Map<ActionType, ActionButton> actionMap = {
     ActionType.open: ActionButton(btnType: ActionType.open, title: '開門', iconCode: Icons.unfold_more_outlined),
     ActionType.close: ActionButton(btnType: ActionType.close, title: '關門', iconCode: Icons.unfold_less_outlined)
   };
 
-  TimerManager _timerManager = TimerManager();
+  final TimerManager _timerManager = TimerManager();
 
   Elevator elevator = Elevator();
+
+  late final AnimationController _animateController;
+  late final Animation<Offset> _leftOpenOffset, _rightOpenOffset, _leftCloseOffset, _rightCloseOffSet;
+  late final Animation<Offset> _upFloorOffset, _downFloorOffset;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animateController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800)
+    );
+
+    _leftOpenOffset = Tween<Offset>(
+      begin: const Offset(0.2, 0), 
+      end: const Offset(-0.3, 0)
+    ).animate(_animateController);
+
+    _rightOpenOffset = Tween<Offset>(
+      begin: const Offset(-0.2, 0),
+      end: const Offset(0.3, 0)
+    ).animate(_animateController);
+
+    _leftCloseOffset = Tween<Offset>(
+      begin: const Offset(-0.3, 0),
+      end: const Offset(0.2, 0)
+    ).animate(_animateController);
+
+    _rightCloseOffSet = Tween<Offset>(
+      begin: const Offset(0.3, 0),
+      end: const Offset(-0.2, 0)
+    ).animate(_animateController);
+
+    _upFloorOffset = Tween<Offset>(
+      begin: const Offset(0, 1),
+      end: const Offset(0, -1)
+    ).animate(_animateController);
+
+    _downFloorOffset = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: const Offset(0, 1)
+    ).animate(_animateController);
+  }
+
+  @override
+  void dispose() {
+    _animateController.dispose();
+    
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,6 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _mainFloorScreen() {
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(
         color: Colors.black
       ),
@@ -249,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 floorMap[elevator.currentFloor]!.title, 
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: CSSManager.floorText, fontSize: 72)
+                style: const TextStyle(color: CSSManager.screenText, fontSize: 72)
               )
             )
           )
@@ -303,32 +355,103 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _getDirectionIcon() {
     if (elevator.direction == Direction.idle) {
-      return const Spacer();
+      if (elevator.doorStatus == DoorStatus.opening) {
+        return Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(child: SlideTransition(
+                  position: _leftOpenOffset,
+                  child: _getScreenIcon(ScreenIcon.left)
+                )
+              ),
+              Expanded(child: 
+                SlideTransition(
+                  position: _rightOpenOffset,
+                  child: _getScreenIcon(ScreenIcon.right)
+                )
+              )
+            ]
+          )
+        );
+      }
+      else if (elevator.doorStatus == DoorStatus.closing) {
+        return Expanded(
+          child: Row(
+            children: <Widget>[
+              Expanded(child: SlideTransition(
+                  position: _leftCloseOffset,
+                  child: _getScreenIcon(ScreenIcon.right)
+                )
+              ),
+              Expanded(child: 
+                SlideTransition(
+                  position: _rightCloseOffSet,
+                  child: _getScreenIcon(ScreenIcon.left)
+                )
+              )
+            ]
+          )
+        );
+      }
+      else
+        return const Spacer();
     }
     else if (elevator.direction == Direction.up) {
-      return const Expanded(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: Icon(
-            Icons.arrow_upward,
-            color: Colors.green,
-            size: 96
-          )
+      return Expanded(
+          child: SlideTransition(
+            position: _upFloorOffset,
+            child: _getScreenIcon(ScreenIcon.up)
         )
       );
     }
     else {
-      return const Expanded(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: Icon(
-            Icons.arrow_downward,
-            color: Colors.green,
-            size: 96
-          )
+      return Expanded(
+          child: SlideTransition(
+            position: _downFloorOffset,
+            child: _getScreenIcon(ScreenIcon.down)
         )
       );
     }
+  }
+
+  FittedBox _getScreenIcon(ScreenIcon direction) {
+    Icon rtnIcon;
+
+    switch (direction) {
+      case ScreenIcon.up:
+        rtnIcon = const Icon(
+            Icons.arrow_upward,
+            color: Colors.green,
+            size: 96
+          );
+      break;
+      case ScreenIcon.down:
+        rtnIcon = const Icon(
+            Icons.arrow_downward,
+            color: Colors.green,
+            size: 96
+          );
+      break;
+      case ScreenIcon.left:
+        rtnIcon = const Icon(
+            Icons.chevron_left,
+            color: CSSManager.screenText,
+            size: 96
+          );
+      break;
+      case ScreenIcon.right:
+        rtnIcon = const Icon(
+            Icons.chevron_right,
+            color: CSSManager.screenText,
+            size: 96
+          );
+      break;
+    }
+
+    return FittedBox(
+          fit: BoxFit.contain,
+          child: rtnIcon
+    );
   }
   
   GestureDetector _getFloorButtonGestureDetector(int btnIndex) {
@@ -361,7 +484,10 @@ class _MyHomePageState extends State<MyHomePage> {
             else if (elevator.currentFloor < btnIndex) {
               goUpFloor();
             }
-            // if elevator.currentFloor == btnIndex, then elevator.direction always idle
+            else {
+              // if elevator.currentFloor == btnIndex, then elevator.direction always idle
+              myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
+            }
           }
 
         });
@@ -425,8 +551,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elevator.currentFloor < maxFloor && hasTarget(elevator.currentFloor, Direction.up)) {
       // 可上樓 且 上方有樓層要前往 => 前進一個樓層
       setState(() {
-        elevator.direction = Direction.up;
-        elevator.lastDirection = Direction.up;
+        setElevatorDirection(Direction.up);
       });
       
       moveFloor(1, goUpFloor);
@@ -441,8 +566,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (elevator.currentFloor > minFloor && hasTarget(elevator.currentFloor, Direction.down)) {
       // 可下樓 且 下方有樓層要前往 => 像下一個樓層
       setState(() {
-        elevator.direction = Direction.down;
-        elevator.lastDirection = Direction.down;
+        setElevatorDirection(Direction.down);
       });
       
       moveFloor(-1, goDownFloor);
@@ -460,7 +584,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         if (floorMap[elevator.currentFloor]!.isTarget) {
           // 到達目標樓層
-          elevator.direction = Direction.idle;  // 電梯方向: 停留
+          setElevatorDirection(Direction.idle); // 電梯方向: 停留
           floorMap[elevator.currentFloor]!.isTarget = false;  // 目標樓層: 取消標記
 
           // 開門
@@ -479,14 +603,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void switchDirectionOrIdle(Direction direction, void Function() goToNext) {
     if (hasTarget(elevator.currentFloor, direction)) {
       setState(() {
-        elevator.direction = direction;
+        setElevatorDirection(direction);
       });
       
       goToNext();
     }
     else {
       setState(() {
-        elevator.direction = Direction.idle;
+        setElevatorDirection(Direction.idle);
       });
     }
   }
@@ -511,6 +635,25 @@ class _MyHomePageState extends State<MyHomePage> {
     return target;
   }
 
+  void setElevatorDirection(Direction target) {
+    elevator.direction = target;
+
+    switch(target) {
+      case Direction.up:
+        _animateController.repeat();
+        elevator.lastDirection = Direction.up;
+      break;
+      case Direction.down:
+        _animateController.repeat();
+        elevator.lastDirection = Direction.down;
+      break;
+      case Direction.idle:
+        _animateController.stop();
+        _animateController.reset();
+      break;
+    }
+  }
+
   void openDoor() {
     if (elevator.direction == Direction.idle) {
       // 只有 idle 的時候可以開門
@@ -518,6 +661,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // 關門 or 關門中 => 觸發開始開門
         setState(() {
           elevator.doorStatus = DoorStatus.opening;
+          _animateController.repeat();
         });
 
         print('doorStatus: ${elevator.doorStatus}');
@@ -525,6 +669,10 @@ class _MyHomePageState extends State<MyHomePage> {
         _timerManager.startTimer(TimerType.doorProc, () {
           setState(() {
             elevator.doorStatus = DoorStatus.open;    // 完成開門, 狀態是已開門
+
+            _animateController.stop();
+            _animateController.reset();
+
             elevator.openedAt = DateTime.now();
           });
 
@@ -548,6 +696,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // 電梯等待且開門
       setState(() {
         elevator.doorStatus = DoorStatus.closing; // 開始關門
+
+        _animateController.repeat();
       });
 
       print('doorStatus: ${elevator.doorStatus}');
@@ -555,6 +705,10 @@ class _MyHomePageState extends State<MyHomePage> {
       _timerManager.startTimer(TimerType.doorProc, () {
         setState(() {
           elevator.doorStatus = DoorStatus.closed;    // 完成關門
+
+          _animateController.stop();
+          _animateController.reset();
+
           elevator.openedAt = null;
         });
 
@@ -621,6 +775,7 @@ enum Direction {down, idle, up}
 enum DoorStatus {closed, closing, opening, open}
 enum ActionType {open, close}
 enum TimerType {doorProc, moveFloor, openWaiting, longPressOpen}
+enum ScreenIcon {up, down, left, right}
 
 class Elevator {
   Direction direction = Direction.idle; // 初始方向：等待
@@ -633,7 +788,7 @@ class Elevator {
 }
 
 class TimerManager {
-  static const int doorProcTime = 1;    // 開關門執行時間
+  static const int doorProcTime = 3;    // 開關門執行時間
   static const int floorTime = 2;       // 樓層移動時間
   static const int openWaitingTime = 5; // 開門後等待時間
   static const int longPressOpenTime = 2; // 長按開門後等待關門的時間
@@ -692,7 +847,7 @@ class CSSManager {
   static const Color backgroundGray = Color(0xFFCCC3CD);
   static const Color defaultBlack = Color(0xFF757382);
   static const Color highlight = Color(0xFFAD6777);
-  static const Color floorText = Color(0xFFC35C5E);
+  static const Color screenText = Color(0xFFC35C5E);
 
   static const double shortSidePercent = 0.35;    // 按鈕的寬邊 (百分比)
   static const double longSidePercent = 0.18;   // 按鈕的長邊(百分比)
