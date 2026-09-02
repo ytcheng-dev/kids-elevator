@@ -7,6 +7,7 @@ import '../models/elevator.dart';
 import '../models/enums.dart';
 import '../models/timer_manager.dart';
 import '../models/animate_offset.dart';
+import '../models/audio_manager.dart';
 
 import '../styles/css_manager.dart';
 
@@ -30,18 +31,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   final int minFloor = -2;
 
   final Map<int, FloorButton> floorMap = {
-    -2: FloorButton(title: 'B2'),
-    -1: FloorButton(title: 'B1'),
-    0: FloorButton(title: '1'),
-    1: FloorButton(title: '2'),
-    2: FloorButton(title: '3'),
-    3: FloorButton(title: '4'),
-    4: FloorButton(title: '5')
+    -2: FloorButton(title: 'B2', audioFile: 'sounds/floor_B2.mp3'),
+    -1: FloorButton(title: 'B1', audioFile: 'sounds/floor_B1.mp3'),
+    0: FloorButton(title: '1', audioFile: 'sounds/floor_1.mp3'),
+    1: FloorButton(title: '2', audioFile: 'sounds/floor_2.mp3'),
+    2: FloorButton(title: '3', audioFile: 'sounds/floor_3.mp3'),
+    3: FloorButton(title: '4', audioFile: 'sounds/floor_4.mp3'),
+    4: FloorButton(title: '5', audioFile: 'sounds/floor_5.mp3')
   };
 
   final Map<ActionType, ActionButton> actionMap = {
-    ActionType.open: ActionButton(btnType: ActionType.open, title: '開門', iconCode: Icons.unfold_more_outlined),
-    ActionType.close: ActionButton(btnType: ActionType.close, title: '關門', iconCode: Icons.unfold_less_outlined)
+    ActionType.open: ActionButton(btnType: ActionType.open, title: '開門', iconCode: Icons.unfold_more_outlined, audioFile: 'sounds/open_door.mp3'),
+    ActionType.close: ActionButton(btnType: ActionType.close, title: '關門', iconCode: Icons.unfold_less_outlined, audioFile: 'sounds/close_door.mp3')
   };
 
   final TimerManager _timerManager = TimerManager();
@@ -50,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   late final AnimationController _animateController;
   late final AnimateOffset _animateOffset;
+
+  late final AudioManager _audioManager;
 
   @override
   void initState() {
@@ -61,11 +64,15 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
 
     _animateOffset = AnimateOffset(animateController: _animateController);
+
+    _audioManager = AudioManager();
   }
 
   @override
   void dispose() {
     _animateController.dispose();
+
+    _audioManager.dispose();
     
     super.dispose();
   }
@@ -180,24 +187,34 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   void moveFloor(int moveIndex, void Function() goNextFloor) {
     _timerManager.startTimer(TimerType.moveFloor, () {
-      setState(() {
-        elevator.currentFloor = elevator.currentFloor + moveIndex;
+        setState(() {
+            elevator.currentFloor = elevator.currentFloor + moveIndex;
+        });
 
         if (floorMap[elevator.currentFloor]!.isTarget) {
           // 到達目標樓層
-          setElevatorDirection(Direction.idle); // 電梯方向: 停留
-          floorMap[elevator.currentFloor]!.isTarget = false;  // 目標樓層: 取消標記
-
-          // 開門
-          openDoor();
+          // 語音
+          _audioManager.request(
+            fileName: 'sounds/ding.mp3',
+            cb: stopAnimate
+          );
+          
+          _audioManager.request(
+                fileName: floorMap[elevator.currentFloor]!.audioFile,
+                cb: () {
+                    setState(() {
+                        setElevatorDirection(Direction.idle); // 電梯方向: 停留
+                        floorMap[elevator.currentFloor]!.isTarget = false;  // 目標樓層: 取消標記
+                    });
+                    
+                    openDoor();    // 開門
+                }
+            );
         }
         else {
           // 再次 goUpFloor() or goDownFloor()
           goNextFloor();
         }
-      }); 
-
-      print('current floor: ${elevator.currentFloor}');
     });
   }
 
@@ -249,42 +266,47 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         elevator.lastDirection = Direction.down;
       break;
       case Direction.idle:
-        _animateController.stop();
-        _animateController.reset();
+        stopAnimate();
       break;
     }
   }
 
+  void stopAnimate() {
+    _animateController.stop();
+    _animateController.reset();
+  }
+
   void openDoor() {
-    if (elevator.direction == Direction.idle) {
+    if (elevator.direction == Direction.idle && elevator.doorStatus == DoorStatus.closed) {
       // 只有 idle 的時候可以開門
       if (elevator.doorStatus != DoorStatus.opening && elevator.doorStatus != DoorStatus.open) {
         // 關門 or 關門中 => 觸發開始開門
         setState(() {
-          elevator.doorStatus = DoorStatus.opening;
-          _animateController.repeat();
+            elevator.doorStatus = DoorStatus.opening;
+            _animateController.repeat();
         });
 
-        print('doorStatus: ${elevator.doorStatus}');
+        _audioManager.request(
+            fileName: actionMap[ActionType.open]!.audioFile, 
+        );
 
         _timerManager.startTimer(TimerType.doorProc, () {
-          setState(() {
-            elevator.doorStatus = DoorStatus.open;    // 完成開門, 狀態是已開門
+            setState(() {
+                elevator.doorStatus = DoorStatus.open;    // 完成開門, 狀態是已開門
 
-            _animateController.stop();
-            _animateController.reset();
+                stopAnimate();
 
-            elevator.openedAt = DateTime.now();
-          });
-
-          print('doorStatus: ${elevator.doorStatus}');
-
-          if (!elevator.isStartLongPress) {
-            // 沒有長按開門 => 倒數關門
-            _timerManager.startTimer(TimerType.openWaiting, () {
-              closeDoor();
+                elevator.openedAt = DateTime.now();
             });
-          }
+
+            print('doorStatus: ${elevator.doorStatus}');
+
+            if (!elevator.isStartLongPress) {
+                // 沒有長按開門 => 倒數關門
+                _timerManager.startTimer(TimerType.openWaiting, () {
+                closeDoor();
+                });
+            }
         });
       }
       // 開門中 => 理論上後續會自行完成開門流程
@@ -295,34 +317,38 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   void closeDoor() {
     if (elevator.direction == Direction.idle && elevator.doorStatus == DoorStatus.open) {
       // 電梯等待且開門
-      setState(() {
-        elevator.doorStatus = DoorStatus.closing; // 開始關門
+        _audioManager.request(fileName: actionMap[ActionType.close]!.audioFile);
 
-        _animateController.repeat();
-      });
-
-      print('doorStatus: ${elevator.doorStatus}');
-
-      _timerManager.startTimer(TimerType.doorProc, () {
         setState(() {
-          elevator.doorStatus = DoorStatus.closed;    // 完成關門
+            elevator.doorStatus = DoorStatus.closing; // 開始關門
 
-          _animateController.stop();
-          _animateController.reset();
-
-          elevator.openedAt = null;
+            _animateController.repeat();
         });
 
         print('doorStatus: ${elevator.doorStatus}');
 
-        // 根據最後一次的移動方向，決定優先檢查的方向
-        if (elevator.lastDirection == Direction.up) {
-          goUpFloor();
-        }
-        else {
-          goDownFloor();
-        }
-      });
+        _timerManager.startTimer(TimerType.doorProc, () {
+            setState(() {
+                elevator.doorStatus = DoorStatus.closed;    // 完成關門
+
+                stopAnimate();
+
+                elevator.openedAt = null;
+            });
+
+            print('doorStatus: ${elevator.doorStatus}');
+
+            _timerManager.startTimer(TimerType.doSwitch, () {
+                // 等待一段時間，提供關門後立刻想重新開門的空檔
+                // 根據最後一次的移動方向，決定優先檢查的方向
+                if (elevator.lastDirection == Direction.up) {
+                    goUpFloor();
+                }
+                else {
+                    goDownFloor();
+                }
+            });
+        });
     }
   }
 

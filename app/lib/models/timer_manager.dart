@@ -7,6 +7,7 @@ class TimerManager {
   static const int floorTime = 2;       // 樓層移動時間
   static const int openWaitingTime = 5; // 開門後等待時間
   static const int longPressOpenTime = 2; // 長按開門後等待關門的時間
+  static const int switchTime = 500; // 關門後轉換成移動的時間(毫秒)
 
   Timer? _pendingTimer;
 
@@ -25,6 +26,9 @@ class TimerManager {
       break;
       case TimerType.longPressOpen:
         _pendingTimer = Timer(const Duration(seconds: TimerManager.longPressOpenTime), cb);
+      break;
+      case TimerType.doSwitch:
+        _pendingTimer = Timer(const Duration(milliseconds: switchTime), cb);
       break;
     }
   }

@@ -24,7 +24,8 @@ enum TimerType {
   doorProc,     // 開/關門執行時間
   moveFloor,    // 樓層移動時間
   openWaiting,  // 開門後預設等待關門時間
-  longPressOpen // 長按開門後，預設等待關門時間
+  longPressOpen,// 長按開門後，預設等待關門時間
+  doSwitch      // 關門後轉換成移動的時間
 }
 
 /// 顯示器 icon 類型
