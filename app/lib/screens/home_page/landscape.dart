@@ -13,9 +13,28 @@ Widget _buildLandscapeBody(_MyHomePageState state, BuildContext context) {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: LayoutBuilder(builder: (context, constraints) => _landscapeButtonGrpBuilder(state, context, constraints))
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      _getVolumeButton(state, VolumeType.sfx),
+                      _getVolumeButton(state, VolumeType.voice)
+                    ]
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(builder: (context, constraints) => _landscapeButtonGrpBuilder(state, context, constraints))
+                  )
+                ]
+              )
             )
           )
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(top: 5, bottom: 5),
+          //     child: LayoutBuilder(builder: (context, constraints) => _landscapeButtonGrpBuilder(state, context, constraints))
+          //   )
+          // )
         ],
       )
     )
@@ -38,7 +57,7 @@ Widget _landscapeFloorScreen(_MyHomePageState state,BuildContext context, BoxCon
         height: floorScreenHeight,
         child: AspectRatio(
           aspectRatio: screenAspectRatio,
-          child: state._mainFloorScreen()
+          child: _mainFloorScreen(state)
         )
       ),
       SizedBox(
@@ -48,11 +67,11 @@ Widget _landscapeFloorScreen(_MyHomePageState state,BuildContext context, BoxCon
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             CSSManager.getButtonBox(
-              state._getDoorButton(state.actionMap[ActionType.open]!), 
+              _getDoorButton(state, state.actionMap[ActionType.open]!), 
               btnSize
             ),
             CSSManager.getButtonBox(
-              state._getDoorButton(state.actionMap[ActionType.close]!), 
+              _getDoorButton(state, state.actionMap[ActionType.close]!), 
               btnSize
             ),
           ],
@@ -76,28 +95,28 @@ Widget _landscapeButtonGrpBuilder(_MyHomePageState state ,BuildContext context, 
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(4), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(0), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 4), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 0), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(3), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(-1), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 3), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, -1), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(2), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(-2), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 2), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, -2), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(1), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 1), btnSize),
             SizedBox(height: btnSize),
           ],
         ),

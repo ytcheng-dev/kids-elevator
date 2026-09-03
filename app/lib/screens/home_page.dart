@@ -8,15 +8,18 @@ import '../models/enums.dart';
 import '../models/timer_manager.dart';
 import '../models/animate_offset.dart';
 import '../models/audio_manager.dart';
+import '../models/sfx_player.dart';
 
 import '../styles/css_manager.dart';
 
 import '../widgets/door_button.dart';
 import '../widgets/floor_tile.dart';
 import '../widgets/floor_display.dart';
+import '../widgets/volume_button.dart';
 
-part 'home_page/landscape.dart';
-part 'home_page/portrait.dart';
+part 'home_page/landscape.dart';        // 橫式排版
+part 'home_page/portrait.dart';         // 直式排版
+part 'home_page/shared.dart';           // 共用排版函式
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -53,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   late final AnimateOffset _animateOffset;
 
   late final AudioManager _audioManager;
+  late final SfxPlayer _sfxPlayer;
 
   @override
   void initState() {
@@ -66,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     _animateOffset = AnimateOffset(animateController: _animateController);
 
     _audioManager = AudioManager();
+
+    _sfxPlayer = SfxPlayer();
   }
 
   @override
@@ -73,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     _animateController.dispose();
 
     _audioManager.dispose();
+
+    _sfxPlayer.dispose();
     
     super.dispose();
   }
@@ -89,71 +97,62 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     }
   }
 
-  Widget _mainFloorScreen() {
-    return FloorDisplay(elevator: elevator, animateOffset: _animateOffset, floorText: floorMap[elevator.currentFloor]!.title);
+  void setDoorButtonPressed(ActionButton actButton, bool isPressed) {
+    setState(() {
+        actButton.isPressed = isPressed;
+    });
   }
 
-  FloorTile _getFloorTile(int btnIndex) {
-    FloorButton myFloor = floorMap[btnIndex]!;
+  void doorButtonOnTap(ActionButton actButton) {
+    _sfxPlayer.request();
 
-    return FloorTile(
-      floorButton: myFloor,
-      onTap: () {
-        setState(() {
-          // 樓層的標記變更
-          myFloor.isTarget = !myFloor.isTarget;
+    if (actButton.btnType == ActionType.open) {
+        openDoor();
+    }
+    else {
+        closeDoor();
+    }
+  }
 
-          if (elevator.direction == Direction.idle && elevator.doorStatus == DoorStatus.closed) {
+  void floorTileOnTap(FloorButton myFloor, int btnIndex) {
+    _sfxPlayer.request();
+
+    setState(() {
+        // 樓層的標記變更
+        myFloor.isTarget = !myFloor.isTarget;
+
+        if (elevator.direction == Direction.idle && elevator.doorStatus == DoorStatus.closed) {
             // 電梯行進方向
             if (elevator.currentFloor > btnIndex) {
-              goDownFloor();
+                goDownFloor();
             }
             else if (elevator.currentFloor < btnIndex) {
-              goUpFloor();
+                goUpFloor();
             }
             else {
-              // if elevator.currentFloor == btnIndex, then elevator.direction always idle
-              myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
+                // if elevator.currentFloor == btnIndex, then elevator.direction always idle
+                myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
             }
-          }
-          else if (elevator.direction == Direction.idle && elevator.currentFloor == btnIndex) {
+        }
+        else if (elevator.direction == Direction.idle && elevator.currentFloor == btnIndex) {
             myFloor.isTarget = !myFloor.isTarget;  // 取消當前樓層的標記
-          }
-        });
-      }
-   );
+        }
+    });    
   }
 
-  Widget _getDoorButton(ActionButton actButton) {
-    return DoorButton(
-      actionButton: actButton,
-      onPointerDown: () {
+  void volumeButtonOnPressed(VolumeType vType) {
+    if (vType == VolumeType.sfx) {
         setState(() {
-          actButton.isPressed = true;
+            _sfxPlayer.isAllow = !_sfxPlayer.isAllow;
         });
-      },
-      onPointerUp: () {
+    }
+    else {
         setState(() {
-          actButton.isPressed = false;
+            _audioManager.isAllow = !_audioManager.isAllow;
         });
-      },
-      onPointerCancel: () {
-        setState(() {
-          actButton.isPressed = false;
-        });
-      },
-      onTap: () {
-        if (actButton.btnType == ActionType.open) {
-          openDoor();
-        }
-        else {
-          closeDoor();
-        }
-      },
-      onLongPressStart: actButton.btnType == ActionType.close ? null : doOpenLongPressStart,
-      onLongPressEnd: actButton.btnType == ActionType.close ? null : doOpenLongPressEnd,
-    );
+    }
   }
+
 
   void goUpFloor() {
     if (elevator.currentFloor < maxFloor && hasTarget(elevator.currentFloor, Direction.up)) {

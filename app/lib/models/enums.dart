@@ -35,3 +35,9 @@ enum ScreenIcon {
   left,   // 向左箭頭(開/關門)
   right   // 向右箭頭(開/關門)
 }
+
+/// 聲音類型
+enum VolumeType {
+  sfx,      // 音效
+  voice     // 語音
+}

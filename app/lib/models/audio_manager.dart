@@ -17,11 +17,17 @@ class AudioManager {
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
+  bool isAllow = true;
 
   String? _nextFile;
   VoidCallback? _nextTask, _targetTask;
 
   void request({required String fileName, void Function()? cb}) {
+    if (!isAllow) {
+      cb?.call();
+      return;
+    }
+
     _nextFile = fileName;
     _nextTask = cb;
 
@@ -37,12 +43,8 @@ class AudioManager {
       targetFile = _nextFile;
       _nextFile = null;
 
-      if (_nextTask != null) {
-        _targetTask = _nextTask;
-        _nextTask = null;
-      }
-
-      print(targetFile);
+      _targetTask = _nextTask;
+      _nextTask = null;
 
       isPlaying = true;
 

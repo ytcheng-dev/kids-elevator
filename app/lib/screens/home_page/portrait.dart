@@ -6,7 +6,11 @@ Widget _buildPortraitBody(_MyHomePageState state, BuildContext context) {
       toolbarHeight: 48,
       backgroundColor: Colors.transparent,
       elevation: 0,   // 分隔線陰影
-      // title: Text(widget.title)
+      // title: Text(widget.title),
+      actions: <Widget>[
+        _getVolumeButton(state, VolumeType.sfx),
+        _getVolumeButton(state, VolumeType.voice)
+      ]
     ),
     body: Container(
       padding: const EdgeInsets.all(20),
@@ -41,7 +45,7 @@ Widget _portraitFloorScreen(_MyHomePageState state, BuildContext context, BoxCon
       width: maxWidth,
       child: AspectRatio(
           aspectRatio: 2,
-          child: state._mainFloorScreen(),
+          child: _mainFloorScreen(state),
         )
     );
 }
@@ -60,40 +64,40 @@ Widget _portraitButtonGrpBuiler(_MyHomePageState state, BuildContext context, Bo
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(4), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 4), btnSize),
             SizedBox(width: btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(2), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(3), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 2), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 3), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(0), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(1), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 0), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, 1), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(state._getFloorTile(-1), btnSize),
-            CSSManager.getButtonBox(state._getFloorTile(-2), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, -1), btnSize),
+            CSSManager.getButtonBox(_getFloorTile(state, -2), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             CSSManager.getButtonBox(
-              state._getDoorButton(state.actionMap[ActionType.open]!), 
+              _getDoorButton(state, state.actionMap[ActionType.open]!), 
               btnSize
             ),
             CSSManager.getButtonBox(
-              state._getDoorButton(state.actionMap[ActionType.close]!), 
+              _getDoorButton(state, state.actionMap[ActionType.close]!), 
               btnSize
             ),
           ],
