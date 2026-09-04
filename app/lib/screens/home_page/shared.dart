@@ -7,26 +7,26 @@ Widget _mainFloorScreen(_MyHomePageState state) {
       floorText: state.floorMap[state.elevator.currentFloor]!.title);
 }
 
-Widget _getFloorTile(_MyHomePageState state, int btnIndex) {
-  FloorButton myFloor = state.floorMap[btnIndex]!;
+Widget _getFloorTile(_MyHomePageState state, int btnKey) {
+  FloorButton floorButton = state.floorMap[btnKey]!;
 
   return FloorTile(
-      floorButton: myFloor,
+      floorButton: floorButton,
       onTap: () {
-        state.floorTileOnTap(myFloor, btnIndex);
+        state.floorTileOnTap(floorButton, btnKey);
       });
 }
 
-Widget _getDoorButton(_MyHomePageState state, ActionButton actButton) {
+Widget _getDoorButton(_MyHomePageState state, ActionButton actionButton) {
   return DoorButton(
-      actionButton: actButton,
+      actionButton: actionButton,
       onTap: () {
-        state.doorButtonOnTap(actButton);
+        state.doorButtonOnTap(actionButton);
       },
-      onLongPressStart: actButton.btnType == ActionType.close
+      onLongPressStart: actionButton.btnType == ActionType.close
           ? null
           : state.doOpenLongPressStart,
-      onLongPressEnd: actButton.btnType == ActionType.close
+      onLongPressEnd: actionButton.btnType == ActionType.close
           ? null
           : state.doOpenLongPressEnd);
 }

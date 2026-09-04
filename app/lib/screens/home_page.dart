@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../models/board_button.dart';
+import '../models/panel_buttons.dart';
 import '../models/elevator.dart';
 import '../models/enums.dart';
 import '../models/timer_manager.dart';
@@ -103,37 +103,37 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  void doorButtonOnTap(ActionButton actButton) {
+  void doorButtonOnTap(ActionButton actionButton) {
     _sfxPlayer.request();
 
-    if (actButton.btnType == ActionType.open) {
+    if (actionButton.btnType == ActionType.open) {
       openDoor();
     } else {
       closeDoor();
     }
   }
 
-  void floorTileOnTap(FloorButton myFloor, int btnIndex) {
+  void floorTileOnTap(FloorButton floorButton, int btnKey) {
     _sfxPlayer.request();
 
     setState(() {
       // 樓層的標記變更
-      myFloor.isTarget = !myFloor.isTarget;
+      floorButton.isTarget = !floorButton.isTarget;
 
       if (elevator.direction == Direction.idle &&
           elevator.doorStatus == DoorStatus.closed) {
         // 電梯行進方向
-        if (elevator.currentFloor > btnIndex) {
+        if (elevator.currentFloor > btnKey) {
           goDownFloor();
-        } else if (elevator.currentFloor < btnIndex) {
+        } else if (elevator.currentFloor < btnKey) {
           goUpFloor();
         } else {
-          // if elevator.currentFloor == btnIndex, then elevator.direction always idle
-          myFloor.isTarget = !myFloor.isTarget; // 取消當前樓層的標記
+          // if elevator.currentFloor == btnKey, then elevator.direction always idle
+          floorButton.isTarget = !floorButton.isTarget; // 取消當前樓層的標記
         }
       } else if (elevator.direction == Direction.idle &&
-          elevator.currentFloor == btnIndex) {
-        myFloor.isTarget = !myFloor.isTarget; // 取消當前樓層的標記
+          elevator.currentFloor == btnKey) {
+        floorButton.isTarget = !floorButton.isTarget; // 取消當前樓層的標記
       }
     });
   }
@@ -180,10 +180,10 @@ class _MyHomePageState extends State<MyHomePage>
     }
   }
 
-  void moveFloor(int moveIndex, void Function() goNextFloor) {
+  void moveFloor(int floorDiff, void Function() goNextFloor) {
     _timerManager.startTimer(TimerType.moveFloor, () {
       setState(() {
-        elevator.currentFloor = elevator.currentFloor + moveIndex;
+        elevator.currentFloor = elevator.currentFloor + floorDiff;
       });
 
       if (floorMap[elevator.currentFloor]!.isTarget) {

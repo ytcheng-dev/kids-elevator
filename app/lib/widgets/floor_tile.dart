@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/board_button.dart';
+import '../models/panel_buttons.dart';
 import '../styles/css_manager.dart';
 
 class FloorTile extends StatelessWidget {

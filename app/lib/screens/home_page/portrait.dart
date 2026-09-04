@@ -25,14 +25,14 @@ Widget _buildPortraitBody(_MyHomePageState state, BuildContext context) {
                         padding: const EdgeInsets.only(left: 5, right: 5),
                         child: LayoutBuilder(
                             builder: (context, constraints) =>
-                                _portraitButtonGrpBuiler(
+                                _portraitButtonGrpBuilder(
                                     state, context, constraints))))
               ])));
 }
 
 Widget _portraitFloorScreen(
-    _MyHomePageState state, BuildContext context, BoxConstraints contraints) {
-  double maxWidth = contraints.maxWidth;
+    _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
+  double maxWidth = constraints.maxWidth;
 
   return SizedBox(
       width: maxWidth,
@@ -42,7 +42,7 @@ Widget _portraitFloorScreen(
       ));
 }
 
-Widget _portraitButtonGrpBuiler(
+Widget _portraitButtonGrpBuilder(
     _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
   double maxWidth = constraints.maxWidth;
   double maxHeight = constraints.maxHeight;
