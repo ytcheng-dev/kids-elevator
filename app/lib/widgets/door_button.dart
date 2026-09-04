@@ -5,13 +5,12 @@ import '../models/board_button.dart';
 import '../styles/css_manager.dart';
 
 class DoorButton extends StatefulWidget {
-  const DoorButton({
-    super.key, 
-    required this.actionButton,
-    this.onTap,
-    this.onLongPressStart,
-    this.onLongPressEnd
-  });
+  const DoorButton(
+      {super.key,
+      required this.actionButton,
+      this.onTap,
+      this.onLongPressStart,
+      this.onLongPressEnd});
 
   final ActionButton actionButton;
 
@@ -33,49 +32,51 @@ class _DoorButtonState extends State<DoorButton> {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: (event) {
-        setState(() {
-          _isPressed = true;
-        });
-      },
-      onPointerUp:(event) {
-        setState(() {
-          _isPressed = false;
-        });
-      },
-      onPointerCancel: (event) {
-        setState(() {
-          _isPressed = false;
-        });
-      },
-      child: GestureDetector(
-        onTap:() {widget.onTap?.call();},
-        onLongPressStart: (details) {widget.onLongPressStart?.call();},
-        onLongPressEnd: (details) {widget.onLongPressEnd?.call();},
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(10),
-          decoration: CSSManager.buttonDecoration(_isPressed),
-          child: RotatedBox(
-            quarterTurns: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Icon(
-                widget.actionButton.iconCode,
-                size: 60,
-                color: _isPressed ? CSSManager.highlight : CSSManager.defaultBlack
-              )
-            )
-          )
-        ),
-      )
-    );
+        onPointerDown: (event) {
+          setState(() {
+            _isPressed = true;
+          });
+        },
+        onPointerUp: (event) {
+          setState(() {
+            _isPressed = false;
+          });
+        },
+        onPointerCancel: (event) {
+          setState(() {
+            _isPressed = false;
+          });
+        },
+        child: GestureDetector(
+          onTap: () {
+            widget.onTap?.call();
+          },
+          onLongPressStart: (details) {
+            widget.onLongPressStart?.call();
+          },
+          onLongPressEnd: (details) {
+            widget.onLongPressEnd?.call();
+          },
+          child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              decoration: CSSManager.buttonDecoration(_isPressed),
+              child: RotatedBox(
+                  quarterTurns: 1,
+                  child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Icon(widget.actionButton.iconCode,
+                          size: 60,
+                          color: _isPressed
+                              ? CSSManager.highlight
+                              : CSSManager.defaultBlack)))),
+        ));
   }
 }
 
 // class DoorButton extends StatelessWidget {
 //   const DoorButton({
-//     super.key, 
+//     super.key,
 //     required this.actionButton,
 //     this.onPointerDown,
 //     this.onPointerUp,
@@ -86,7 +87,7 @@ class _DoorButtonState extends State<DoorButton> {
 //   });
 
 //   final ActionButton actionButton;
-  
+
 //   final VoidCallback? onPointerDown;
 //   final VoidCallback? onPointerUp;
 //   final VoidCallback? onPointerCancel;
