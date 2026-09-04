@@ -26,6 +26,4 @@ class ActionButton {
   final String audioFile;
   final IconData iconCode;
   final ActionType btnType;
-
-  bool isPressed = false;
 }

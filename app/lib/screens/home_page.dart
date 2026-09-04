@@ -97,12 +97,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     }
   }
 
-  void setDoorButtonPressed(ActionButton actButton, bool isPressed) {
-    setState(() {
-        actButton.isPressed = isPressed;
-    });
-  }
-
   void doorButtonOnTap(ActionButton actButton) {
     _sfxPlayer.request();
 

@@ -18,15 +18,6 @@ Widget _getFloorTile(_MyHomePageState state, int btnIndex) {
 Widget _getDoorButton(_MyHomePageState state, ActionButton actButton) {
   return DoorButton(
     actionButton: actButton,
-    onPointerDown: () {
-      state.setDoorButtonPressed(actButton, true);
-    },
-    onPointerUp: () {
-      state.setDoorButtonPressed(actButton, false);
-    },
-    onPointerCancel: () {
-      state.setDoorButtonPressed(actButton, false);
-    },
     onTap: () {
       state.doorButtonOnTap(actButton);
     },
