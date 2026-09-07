@@ -1,4 +1,4 @@
-part of '../home_page.dart';
+part of '../panel_page.dart';
 
 Widget _buildPortraitBody(_MyHomePageState state, BuildContext context) {
   return Scaffold(

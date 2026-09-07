@@ -17,9 +17,9 @@ import '../widgets/floor_tile.dart';
 import '../widgets/floor_display.dart';
 import '../widgets/volume_button.dart';
 
-part 'home_page/landscape.dart'; // 橫式排版
-part 'home_page/portrait.dart'; // 直式排版
-part 'home_page/shared.dart'; // 共用排版函式
+part 'panel_page/landscape.dart'; // 橫式排版
+part 'panel_page/portrait.dart'; // 直式排版
+part 'panel_page/shared.dart'; // 共用排版函式
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
