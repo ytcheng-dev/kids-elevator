@@ -1,13 +1,13 @@
 part of '../panel_page.dart';
 
-Widget _mainFloorScreen(_MyHomePageState state) {
+Widget _mainFloorScreen(_PanelPageState state) {
   return FloorDisplay(
       elevator: state.elevator,
       animateOffset: state._animateOffset,
       floorText: state.floorMap[state.elevator.currentFloor]!.title);
 }
 
-Widget _getFloorTile(_MyHomePageState state, int btnKey) {
+Widget _getFloorTile(_PanelPageState state, int btnKey) {
   FloorButton floorButton = state.floorMap[btnKey]!;
 
   return FloorTile(
@@ -17,7 +17,7 @@ Widget _getFloorTile(_MyHomePageState state, int btnKey) {
       });
 }
 
-Widget _getDoorButton(_MyHomePageState state, ActionButton actionButton) {
+Widget _getDoorButton(_PanelPageState state, ActionButton actionButton) {
   return DoorButton(
       actionButton: actionButton,
       onTap: () {
@@ -31,7 +31,7 @@ Widget _getDoorButton(_MyHomePageState state, ActionButton actionButton) {
           : state.doOpenLongPressEnd);
 }
 
-Widget _getVolumeButton(_MyHomePageState state, VolumeType vType) {
+Widget _getVolumeButton(_PanelPageState state, VolumeType vType) {
   return VolumeButton(
       isAllow: vType == VolumeType.sfx
           ? state._sfxPlayer.isAllow

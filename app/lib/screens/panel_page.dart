@@ -21,15 +21,15 @@ part 'panel_page/landscape.dart'; // 橫式排版
 part 'panel_page/portrait.dart'; // 直式排版
 part 'panel_page/shared.dart'; // 共用排版函式
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class PanelPage extends StatefulWidget {
+  const PanelPage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<PanelPage> createState() => _PanelPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
+class _PanelPageState extends State<PanelPage>
     with SingleTickerProviderStateMixin {
   final int maxFloor = 4;
   final int minFloor = -2;

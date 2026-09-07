@@ -1,6 +1,6 @@
 part of '../panel_page.dart';
 
-Widget _buildPortraitBody(_MyHomePageState state, BuildContext context) {
+Widget _buildPortraitBody(_PanelPageState state, BuildContext context) {
   return Scaffold(
       appBar: AppBar(
           toolbarHeight: 48,
@@ -31,7 +31,7 @@ Widget _buildPortraitBody(_MyHomePageState state, BuildContext context) {
 }
 
 Widget _portraitFloorScreen(
-    _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
+    _PanelPageState state, BuildContext context, BoxConstraints constraints) {
   double maxWidth = constraints.maxWidth;
 
   return SizedBox(
@@ -43,7 +43,7 @@ Widget _portraitFloorScreen(
 }
 
 Widget _portraitButtonGrpBuilder(
-    _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
+    _PanelPageState state, BuildContext context, BoxConstraints constraints) {
   double maxWidth = constraints.maxWidth;
   double maxHeight = constraints.maxHeight;
 

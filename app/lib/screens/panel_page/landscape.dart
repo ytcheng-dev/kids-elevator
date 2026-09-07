@@ -1,6 +1,6 @@
 part of '../panel_page.dart';
 
-Widget _buildLandscapeBody(_MyHomePageState state, BuildContext context) {
+Widget _buildLandscapeBody(_PanelPageState state, BuildContext context) {
   return Scaffold(
       // appBar: _mainAppBar(context),
       body: Container(
@@ -39,7 +39,7 @@ Widget _buildLandscapeBody(_MyHomePageState state, BuildContext context) {
 }
 
 Widget _landscapeFloorScreen(
-    _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
+    _PanelPageState state, BuildContext context, BoxConstraints constraints) {
   double maxHeight = constraints.maxHeight,
       floorScreenHeight = maxHeight * 0.7,
       btnPaletHeight = maxHeight * 0.25,
@@ -74,7 +74,7 @@ Widget _landscapeFloorScreen(
 }
 
 Widget _landscapeButtonGrpBuilder(
-    _MyHomePageState state, BuildContext context, BoxConstraints constraints) {
+    _PanelPageState state, BuildContext context, BoxConstraints constraints) {
   double maxWidth = constraints.maxWidth;
   double maxHeight = constraints.maxHeight;
 
