@@ -41,3 +41,12 @@ Widget _getVolumeButton(_PanelPageState state, VolumeType vType) {
         state.volumeButtonOnPressed(vType);
       });
 }
+
+Widget _getHomeButton(_PanelPageState state) {
+  return IconButton(
+    icon: const Icon(Icons.home),
+    onPressed: () {
+      Navigator.pop(state.context);
+    }
+  );
+}

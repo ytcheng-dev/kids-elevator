@@ -3,13 +3,15 @@ part of '../panel_page.dart';
 Widget _buildPortraitBody(_PanelPageState state, BuildContext context) {
   return Scaffold(
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: 48,
           backgroundColor: Colors.transparent,
           elevation: 0, // 分隔線陰影
           // title: Text(widget.title),
           actions: <Widget>[
             _getVolumeButton(state, VolumeType.sfx),
-            _getVolumeButton(state, VolumeType.voice)
+            _getVolumeButton(state, VolumeType.voice),
+            _getHomeButton(state)
           ]),
       body: Container(
           padding: const EdgeInsets.all(20),

@@ -20,7 +20,8 @@ Widget _buildLandscapeBody(_PanelPageState state, BuildContext context) {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               _getVolumeButton(state, VolumeType.sfx),
-                              _getVolumeButton(state, VolumeType.voice)
+                              _getVolumeButton(state, VolumeType.voice),
+                              _getHomeButton(state)
                             ]),
                         Expanded(
                             child: LayoutBuilder(

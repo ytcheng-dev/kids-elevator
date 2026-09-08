@@ -22,8 +22,7 @@ part 'panel_page/portrait.dart'; // 直式排版
 part 'panel_page/shared.dart'; // 共用排版函式
 
 class PanelPage extends StatefulWidget {
-  const PanelPage({super.key, required this.title});
-  final String title;
+  const PanelPage({super.key});
 
   @override
   State<PanelPage> createState() => _PanelPageState();
