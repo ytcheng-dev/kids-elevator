@@ -9,8 +9,6 @@ Widget _buildPortraitBody(_PanelPageState state, BuildContext context) {
           elevation: 0, // 分隔線陰影
           // title: Text(widget.title),
           actions: <Widget>[
-            _getVolumeButton(state, VolumeType.sfx),
-            _getVolumeButton(state, VolumeType.voice),
             _getHomeButton(state)
           ]),
       body: Container(

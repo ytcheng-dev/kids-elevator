@@ -31,17 +31,6 @@ Widget _getDoorButton(_PanelPageState state, ActionButton actionButton) {
           : state.doOpenLongPressEnd);
 }
 
-Widget _getVolumeButton(_PanelPageState state, VolumeType vType) {
-  return VolumeButton(
-      isAllow: vType == VolumeType.sfx
-          ? state._sfxPlayer.isAllow
-          : state._audioManager.isAllow,
-      volumeType: vType,
-      onPressed: () {
-        state.volumeButtonOnPressed(vType);
-      });
-}
-
 Widget _getHomeButton(_PanelPageState state) {
   return IconButton(
     icon: const Icon(Icons.home),

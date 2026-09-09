@@ -16,10 +16,9 @@ class SfxPlayer {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final String audioFile = 'sounds/button.mp3';
 
-  bool isAllow = true, // 是否允許播放音效
-      isPlaying = false; // 是否正在播放
+  bool isPlaying = false; // 是否正在播放
 
-  void request() {
+  void request({required bool isAllow}) {
     if (!isPlaying && isAllow) {
       _play();
     }

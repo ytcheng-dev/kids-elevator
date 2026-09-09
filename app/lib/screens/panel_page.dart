@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/panel_buttons.dart';
 import '../models/elevator.dart';
@@ -15,20 +16,21 @@ import '../styles/css_manager.dart';
 import '../widgets/door_button.dart';
 import '../widgets/floor_tile.dart';
 import '../widgets/floor_display.dart';
-import '../widgets/volume_button.dart';
+
+import '../providers/volume.dart';
 
 part 'panel_page/landscape.dart'; // 橫式排版
 part 'panel_page/portrait.dart'; // 直式排版
 part 'panel_page/shared.dart'; // 共用排版函式
 
-class PanelPage extends StatefulWidget {
+class PanelPage extends ConsumerStatefulWidget {
   const PanelPage({super.key});
 
   @override
-  State<PanelPage> createState() => _PanelPageState();
+  ConsumerState<PanelPage> createState() => _PanelPageState();
 }
 
-class _PanelPageState extends State<PanelPage>
+class _PanelPageState extends ConsumerState<PanelPage>
     with SingleTickerProviderStateMixin {
   final int maxFloor = 4;
   final int minFloor = -2;
@@ -103,7 +105,7 @@ class _PanelPageState extends State<PanelPage>
   }
 
   void doorButtonOnTap(ActionButton actionButton) {
-    _sfxPlayer.request();
+    requestSfxPlayer();
 
     if (actionButton.btnType == ActionType.open) {
       openDoor();
@@ -113,7 +115,7 @@ class _PanelPageState extends State<PanelPage>
   }
 
   void floorTileOnTap(FloorButton floorButton, int btnKey) {
-    _sfxPlayer.request();
+    requestSfxPlayer();
 
     setState(() {
       // 樓層的標記變更
@@ -135,18 +137,6 @@ class _PanelPageState extends State<PanelPage>
         floorButton.isTarget = !floorButton.isTarget; // 取消當前樓層的標記
       }
     });
-  }
-
-  void volumeButtonOnPressed(VolumeType vType) {
-    if (vType == VolumeType.sfx) {
-      setState(() {
-        _sfxPlayer.isAllow = !_sfxPlayer.isAllow;
-      });
-    } else {
-      setState(() {
-        _audioManager.isAllow = !_audioManager.isAllow;
-      });
-    }
   }
 
   void goUpFloor() {
@@ -188,9 +178,9 @@ class _PanelPageState extends State<PanelPage>
       if (floorMap[elevator.currentFloor]!.isTarget) {
         // 到達目標樓層
         // 語音
-        _audioManager.request(fileName: 'sounds/ding.mp3', cb: stopAnimate);
+        requestVoicePlayer(fileName: 'sounds/ding.mp3', cb: stopAnimate);
 
-        _audioManager.request(
+        requestVoicePlayer(
             fileName: floorMap[elevator.currentFloor]!.audioFile,
             cb: () {
               setState(() {
@@ -275,7 +265,7 @@ class _PanelPageState extends State<PanelPage>
           _animateController.repeat();
         });
 
-        _audioManager.request(
+        requestVoicePlayer(
           fileName: actionMap[ActionType.open]!.audioFile,
         );
 
@@ -305,7 +295,7 @@ class _PanelPageState extends State<PanelPage>
     if (elevator.direction == Direction.idle &&
         elevator.doorStatus == DoorStatus.open) {
       // 電梯等待且開門
-      _audioManager.request(fileName: actionMap[ActionType.close]!.audioFile);
+      requestVoicePlayer(fileName: actionMap[ActionType.close]!.audioFile);
 
       setState(() {
         elevator.doorStatus = DoorStatus.closing; // 開始關門
@@ -378,5 +368,19 @@ class _PanelPageState extends State<PanelPage>
       }
       // 如果還沒有完成就觸發 LongPressEnd, 應該會值行正常的預設倒數關門
     }
+  }
+
+  void requestVoicePlayer({required String fileName, VoidCallback? cb}) {
+    _audioManager.request(
+      isAllow: ref.read(volumeProvider).isAllowVoice, 
+      fileName: fileName, 
+      cb: cb
+    );
+  }
+
+  void requestSfxPlayer() {
+    _sfxPlayer.request(
+      isAllow: ref.read(volumeProvider).isAllowSfx
+    );
   }
 }
