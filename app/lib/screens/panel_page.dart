@@ -8,7 +8,7 @@ import '../models/elevator.dart';
 import '../models/enums.dart';
 import '../models/timer_manager.dart';
 import '../models/animate_offset.dart';
-import '../models/audio_manager.dart';
+import '../models/voice_player.dart';
 import '../models/sfx_player.dart';
 
 import '../styles/css_manager.dart';
@@ -65,7 +65,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
   late final AnimationController _animateController;
   late final AnimateOffset _animateOffset;
 
-  late final AudioManager _audioManager;
+  late final VoicePlayer _voicePlayer;
   late final SfxPlayer _sfxPlayer;
 
   @override
@@ -77,7 +77,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
 
     _animateOffset = AnimateOffset(animateController: _animateController);
 
-    _audioManager = AudioManager();
+    _voicePlayer = VoicePlayer();
 
     _sfxPlayer = SfxPlayer();
   }
@@ -86,7 +86,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
   void dispose() {
     _animateController.dispose();
 
-    _audioManager.dispose();
+    _voicePlayer.dispose();
 
     _sfxPlayer.dispose();
 
@@ -371,7 +371,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
   }
 
   void requestVoicePlayer({required String fileName, VoidCallback? cb}) {
-    _audioManager.request(
+    _voicePlayer.request(
       isAllow: ref.read(volumeProvider).isAllowVoice, 
       fileName: fileName, 
       cb: cb

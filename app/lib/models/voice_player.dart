@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 
-class AudioManager {
-  AudioManager() {
+class VoicePlayer {
+  VoicePlayer() {
     _audioPlayer.onPlayerComplete.listen((event) {
       // 先執行任務, 然後才能播放下一條
       _targetTask?.call();
