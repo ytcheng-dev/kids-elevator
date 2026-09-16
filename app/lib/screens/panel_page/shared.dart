@@ -32,10 +32,7 @@ Widget _getDoorButton(_PanelPageState state, ActionButton actionButton) {
 }
 
 Widget _getHomeButton(_PanelPageState state) {
-  return IconButton(
-    icon: const Icon(Icons.home),
-    onPressed: () {
-      Navigator.pop(state.context);
-    }
-  );
+  return BackLeading(onPressed: () {
+    Navigator.pop(state.context);
+  });
 }

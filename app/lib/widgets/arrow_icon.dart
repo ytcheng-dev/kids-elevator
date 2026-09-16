@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/enums.dart';
 
-import '../styles/css_manager.dart';
+import '../styles/panel_page.dart';
 
 class ArrowIcon extends StatelessWidget {
   const ArrowIcon({super.key, required this.directionIcon});

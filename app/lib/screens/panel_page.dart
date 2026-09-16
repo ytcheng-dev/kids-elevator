@@ -11,11 +11,13 @@ import '../models/animate_offset.dart';
 import '../models/voice_player.dart';
 import '../models/sfx_player.dart';
 
-import '../styles/css_manager.dart';
+import '../styles/panel_page.dart';
+import '../styles/layout_css.dart';
 
 import '../widgets/panel_page/door_button.dart';
 import '../widgets/panel_page/floor_tile.dart';
 import '../widgets/panel_page/floor_display.dart';
+import '../widgets/back_leading.dart';
 
 import '../providers/volume.dart';
 

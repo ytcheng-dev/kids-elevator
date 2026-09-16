@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/panel_buttons.dart';
-import '../../styles/css_manager.dart';
+import '../../styles/panel_page.dart';
 
 class FloorTile extends StatelessWidget {
   const FloorTile({super.key, required this.floorButton, this.onTap});
