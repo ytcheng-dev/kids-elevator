@@ -13,9 +13,9 @@ import '../models/sfx_player.dart';
 
 import '../styles/css_manager.dart';
 
-import '../widgets/door_button.dart';
-import '../widgets/floor_tile.dart';
-import '../widgets/floor_display.dart';
+import '../widgets/panel_page/door_button.dart';
+import '../widgets/panel_page/floor_tile.dart';
+import '../widgets/panel_page/floor_display.dart';
 
 import '../providers/volume.dart';
 
@@ -89,6 +89,8 @@ class _PanelPageState extends ConsumerState<PanelPage>
     _voicePlayer.dispose();
 
     _sfxPlayer.dispose();
+
+    _timerManager.clear();
 
     super.dispose();
   }

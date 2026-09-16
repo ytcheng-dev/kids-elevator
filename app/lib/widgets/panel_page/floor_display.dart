@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/animate_offset.dart';
-import '../models/elevator.dart';
+import '../../models/animate_offset.dart';
+import '../../models/elevator.dart';
 
-import '../styles/css_manager.dart';
+import '../../styles/css_manager.dart';
 
 import 'direction_icon.dart';
 

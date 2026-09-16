@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../models/animate_offset.dart';
-import '../models/elevator.dart';
-import '../models/enums.dart';
+import '../../models/animate_offset.dart';
+import '../../models/elevator.dart';
+import '../../models/enums.dart';
 
-import 'arrow_icon.dart';
+import '../arrow_icon.dart';
 
 class DirectionIcon extends StatelessWidget {
   const DirectionIcon(

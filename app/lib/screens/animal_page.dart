@@ -13,7 +13,9 @@ import '../models/animate_offset.dart';
 import '../models/voice_player.dart';
 import '../models/sfx_player.dart';
 
-import '../widgets/arrow_icon.dart';
+import '../widgets/animal_page/direction_icon.dart';
+import '../widgets/animal_page/floor_tile.dart';
+import '../widgets/animal_page/question_button.dart';
 
 import '../styles/layout_css.dart';
 
@@ -30,13 +32,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   final int maxFloor = 4;
   final int minFloor = -2;
   
-  final List<Animal> animalList = [
-    const Animal(headShotImg: 'assets/images/animal_page/dinosaur_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
-    const Animal(headShotImg: 'assets/images/animal_page/dog_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
-    const Animal(headShotImg: 'assets/images/animal_page/cat_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
-    const Animal(headShotImg: 'assets/images/animal_page/elephant_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
-    const Animal(headShotImg: 'assets/images/animal_page/rabbit_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4')
-  ];
+  final List<Animal> animalList = getInitAnimals();
 
   final Map<int, FloorButton> floorMap = {
     -2: FloorButton(title: 'B2', audioFile: 'sounds/floor_B2.mp3'),
@@ -53,11 +49,13 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   final Random random = Random();
 
   int answerFloorKey = 0;   // 配合畫面初始為 1 樓
-  int animalKey = 0;
   bool isShowingAnimation = false;
+
   VideoPlayerController? _videoController;
 
   final TimerManager _timerManager = TimerManager();
+
+  late Animal currentAnimal;
 
   late final AnimationController _animateController;
   late final AnimateOffset _animateOffset;
@@ -77,7 +75,10 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
     _voicePlayer = VoicePlayer();
     _sfxPlayer = SfxPlayer();
 
+    currentAnimal = animalList[0];
+
     resetQuestion();
+    playQuestion();
   }
 
   @override
@@ -87,9 +88,9 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
     _voicePlayer.dispose();
     _sfxPlayer.dispose();
 
-    if (_videoController != null) {
-      _videoController!.dispose();
-    }
+    _timerManager.clear();
+
+    _videoController?.dispose();
 
     super.dispose();
   }
@@ -107,7 +108,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
               children: <Widget>[
                 Expanded(
                   flex: 15,
-                  child: _talkingUI(this, animalList[animalKey])
+                  child: _talkingUI(this, currentAnimal)
                 ),
                 Expanded(
                   flex: 25,
@@ -177,17 +178,13 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   }
 
   void goDownFloor(int targetFloorKey) {
-    setState(() {
-      setElevatorDirection(Direction.down);
-    });
+    setElevatorDirection(Direction.down);
 
     moveFloor(-1, targetFloorKey);
   }
 
   void goUpFloor(int targetFloorKey) {
-    setState(() {
-      setElevatorDirection(Direction.up);
-    });
+    setElevatorDirection(Direction.up);
 
     moveFloor(1, targetFloorKey);
   }
@@ -225,11 +222,9 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   }
 
   void checkAnswer() {
-    final Animal animal = animalList[animalKey];
-
     if (elevator.currentFloor == answerFloorKey) {
       // 正確動畫
-      playVideo(animal.correctAnimate, () {
+      playVideo(currentAnimal.correctAnimate, () {
         // 動畫結束才能操作
         setState(() {
           isShowingAnimation = false;
@@ -242,7 +237,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
     }
     else {
       // 錯誤動畫
-      playVideo(animal.errAnimate, () {
+      playVideo(currentAnimal.errAnimate, () {
         // 動畫結束才能操作
         setState(() {
           isShowingAnimation = false;
@@ -262,17 +257,21 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   void resetQuestion() {
     setState(() {
       // 隨機動物
-      animalKey = random.nextInt(animalList.length);
+      int animalKey = random.nextInt(animalList.length);
+      currentAnimal = animalList[animalKey];
 
       // 隨機樓層
       List<int> otherFloors = floorMap.keys.where((k) => k != elevator.currentFloor).toList();
       answerFloorKey = otherFloors[random.nextInt(otherFloors.length)];
     });
-
-    print(answerFloorKey);
   }
 
-  void playQuestion() {}
+  void playQuestion() {
+    int randQ = random.nextInt(currentAnimal.quesAudios.length);
+
+    requestVoicePlayer(fileName: currentAnimal.quesAudios[randQ]);
+    requestVoicePlayer(fileName: currentAnimal.floorAudios[answerFloorKey]!);
+  }
 
   void setElevatorDirection(Direction target) {
     setState(() {
@@ -315,6 +314,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
         cb?.call();
 
         _videoController!.dispose();
+        _videoController = null;
       }
     });
 
@@ -447,198 +447,30 @@ Widget _btnGrpUI(_AnimalPageState state, BuildContext context, BoxConstraints co
   );
 }
 
-class QuestionButton extends StatefulWidget {
-  const QuestionButton ({
-    super.key,
-    this.onTap
-  });
-
-  final VoidCallback? onTap;
-
-  @override
-  State<QuestionButton> createState() => _QuestionButtonState();
-}
-
-class _QuestionButtonState extends State<QuestionButton> {
-  _QuestionButtonState();
-
-  bool isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (tapDownDetails) {
-        setState(() {
-          isPressed = true;
-        });
-      },
-      onTapUp: (tapUpDetails) {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      child: Container(
-        margin: LayoutCss.m3,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFCA7F3A),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: isPressed ? 
-            const [BoxShadow(
-              color: Color(0xFF4C2700),
-              offset: Offset(0,1),
-              blurRadius: 1
-            )]
-           : 
-            const [BoxShadow(
-              color: Color(0xFF4C2700),
-              offset: Offset(0,5),
-              blurRadius: 3
-            )]
-        ),
-        child: const FittedBox(
-          fit: BoxFit.contain,
-          child: Icon(
-            Icons.volume_up,
-            size: 48,
-            color: Colors.white
-          )
-        )
-      )
-    );
-  }
-}
-
-class FloorTile extends StatefulWidget {
-  const FloorTile ({
-    super.key,
-    required this.floorButton,
-    this.onTap
-  });
-
-  final FloorButton floorButton;
-
-  final VoidCallback? onTap;
-
-  @override
-  State<FloorTile> createState() => _FloorTileState();
-}
-
-class _FloorTileState extends State<FloorTile> {
-  _FloorTileState();
-
-  bool isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (tapDownDetails) {
-        setState(() {
-          isPressed = true;
-        });
-      },
-      onTapUp: (tapUpDetails) {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: widget.floorButton.isTarget ? const Color(0xFFFFEDE2) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: const Color(0xFFDDD6CC),
-            width: 1
-          ),
-          boxShadow: [_getShadow()]
-        ),
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: Text(
-            widget.floorButton.title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 48,
-              fontWeight: FontWeight.bold,
-              color: widget.floorButton.isTarget ? const Color(0xFF6D3A00) : Colors.black
-            )
-          )
-        )
-      )
-    );
-  }
-
-  BoxShadow _getShadow() {
-    if (widget.floorButton.isTarget) {
-      return const BoxShadow(
-        color: Color(0xFF6D3A00),
-        offset: Offset(0, 5),
-        blurRadius: 3
-      );
-    }
-    else {
-      return isPressed ? 
-            const BoxShadow(
-              color: Color(0xFF665D52),
-              offset: Offset(0,1),
-              blurRadius: 1
-            )
-           : 
-            const BoxShadow(
-              color: Color(0xFF665D52),
-              offset: Offset(0,5),
-              blurRadius: 3
-            );
-          
-    }
-  }
-}
-
-class DirectionIcon extends StatelessWidget {
-  const DirectionIcon({
-    super.key,
-    required this.direction,
-    required this.animateOffset
-  });
-
-  final Direction direction;
-  final AnimateOffset animateOffset;
-
-  @override
-  Widget build(BuildContext context) {
-    if (direction == Direction.up) {
-      return Expanded(
-        child: SlideTransition(
-          position: animateOffset.upFloorOffset,
-          child: const ArrowIcon(directionIcon: ScreenIcon.up)
-        )
-      );
-    }
-    else if (direction == Direction.down) {
-      return Expanded(
-        child: SlideTransition(
-          position: animateOffset.downFloorOffset,
-          child: const ArrowIcon(directionIcon: ScreenIcon.down)
-        )
-      );
-    }
-    else {
-      return const Spacer();
-    }
-  }
+List<Animal> getInitAnimals() {
+  return [
+    const Animal(
+      headShotImg: 'assets/images/animal_page/dinosaur_headshot.png', 
+      correctAnimate: 'assets/videos/dinosaur_correct.mp4', 
+      errAnimate: 'assets/videos/dinosaur_correct.mp4',
+      quesAudios: [
+        'sounds/dinosaur/q1.wav',
+        'sounds/dinosaur/q1.wav',
+        'sounds/dinosaur/q1.wav'
+      ],
+      floorAudios: {
+        -2: 'sounds/dinosaur/floorB2.wav',
+        -1: 'sounds/dinosaur/floorB1.wav',
+        0: 'sounds/dinosaur/floor1.wav',
+        1: 'sounds/dinosaur/floor2.wav',
+        2: 'sounds/dinosaur/floor3.wav',
+        3: 'sounds/dinosaur/floor4.wav',
+        4: 'sounds/dinosaur/floor5.wav'
+      }
+    ),
+    // const Animal(headShotImg: 'assets/images/animal_page/dog_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
+    // const Animal(headShotImg: 'assets/images/animal_page/cat_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
+    // const Animal(headShotImg: 'assets/images/animal_page/elephant_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
+    // const Animal(headShotImg: 'assets/images/animal_page/rabbit_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4')
+  ];
 }

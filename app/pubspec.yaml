@@ -67,6 +67,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/sounds/
+    - assets/sounds/dinosaur/
     - assets/images/home_page/
     - assets/images/animal_page/
     - assets/videos/

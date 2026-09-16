@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/panel_buttons.dart';
+import '../../models/panel_buttons.dart';
 
-import '../styles/css_manager.dart';
+import '../../styles/css_manager.dart';
 
 class DoorButton extends StatefulWidget {
   const DoorButton(
