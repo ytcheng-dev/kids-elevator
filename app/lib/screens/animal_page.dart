@@ -16,6 +16,7 @@ import '../models/sfx_player.dart';
 import '../widgets/animal_page/direction_icon.dart';
 import '../widgets/animal_page/floor_tile.dart';
 import '../widgets/animal_page/question_button.dart';
+import '../widgets/back_leading.dart';
 
 import '../styles/layout_css.dart';
 
@@ -49,7 +50,8 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   final Random random = Random();
 
   int answerFloorKey = 0;   // 配合畫面初始為 1 樓
-  bool isShowingAnimation = false;
+  bool isShowingAnimation = false;  // 是否正在播放動畫
+  bool isTalking = false;   // 是否正在說明題目
 
   VideoPlayerController? _videoController;
 
@@ -57,8 +59,8 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
 
   late Animal currentAnimal;
 
-  late final AnimationController _animateController;
-  late final AnimateOffset _animateOffset;
+  late final AnimationController _directionAnimateController;
+  late final AnimateOffset _directionAnimateOffset;
 
   late final VoicePlayer _voicePlayer;
   late final SfxPlayer _sfxPlayer;
@@ -67,10 +69,10 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   void initState() {
     super.initState();
 
-    _animateController = AnimationController(
+    _directionAnimateController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 800));
 
-    _animateOffset = AnimateOffset(animateController: _animateController);
+    _directionAnimateOffset = AnimateOffset(animateController: _directionAnimateController);
 
     _voicePlayer = VoicePlayer();
     _sfxPlayer = SfxPlayer();
@@ -83,7 +85,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
 
   @override
   void dispose() {
-    _animateController.dispose();
+    _directionAnimateController.dispose();
 
     _voicePlayer.dispose();
     _sfxPlayer.dispose();
@@ -98,7 +100,17 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: LayoutCss.defaultBG,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 48,
+        backgroundColor: Colors.transparent,
+        elevation: 0, // 分隔線陰影
+        // title: Text(widget.title),
+        actions: <Widget>[BackLeading(onPressed: () {
+          Navigator.pop(context);
+        })]
+      ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Stack(
@@ -125,7 +137,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
             if (isShowingAnimation && _videoController != null) 
               Positioned.fill(
                 child: Container(
-                  color: Colors.black54,
+                  color: LayoutCss.neutral6,
                   child: Center(
                     child: AspectRatio(
                       aspectRatio: _videoController!.value.aspectRatio,
@@ -249,7 +261,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
 
   void doQuestionOnTap() {
     // 重播相同題目
-    if (elevator.allowControl) {
+    if (elevator.allowControl && !isTalking) {
       playQuestion();
     }
   }
@@ -267,10 +279,20 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   }
 
   void playQuestion() {
+    setState(() {
+      isTalking = true;
+    });
+
     int randQ = random.nextInt(currentAnimal.quesAudios.length);
 
     requestVoicePlayer(fileName: currentAnimal.quesAudios[randQ]);
-    requestVoicePlayer(fileName: currentAnimal.floorAudios[answerFloorKey]!);
+    requestVoicePlayer(
+      fileName: currentAnimal.floorAudios[answerFloorKey]!, 
+      cb: () {
+        setState(() {
+          isTalking = false;
+        });
+      });
   }
 
   void setElevatorDirection(Direction target) {
@@ -280,10 +302,10 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
 
     switch (target) {
       case Direction.up:
-        _animateController.repeat();
+        _directionAnimateController.repeat();
         break;
       case Direction.down:
-        _animateController.repeat();
+        _directionAnimateController.repeat();
         break;
       case Direction.idle:
         stopAnimate();
@@ -292,8 +314,8 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   }
 
   void stopAnimate() {
-    _animateController.stop();
-    _animateController.reset();
+    _directionAnimateController.stop();
+    _directionAnimateController.reset();
   }
 
   void playVideo(String videoFileName, VoidCallback? cb) async {
@@ -339,10 +361,10 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
     return Container(
       margin: LayoutCss.mb1,
       decoration: BoxDecoration(
-        color: const Color(0xFF000000),
+        color: LayoutCss.neutral9,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: const Color(0xFF211B12),
+          color: LayoutCss.neutral8,
           width: 10
         )
       ),
@@ -350,14 +372,14 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          DirectionIcon(direction: elevator.direction, animateOffset: _animateOffset),
+          DirectionIcon(direction: elevator.direction, animateOffset: _directionAnimateOffset),
           Expanded(
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(floorText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Color(0xFFFFB77B)
+                  color: LayoutCss.secondary
                 )
               )
             )
@@ -370,27 +392,14 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
 
 Widget _talkingUI(_AnimalPageState state, Animal animal) {
   return Container(
-    margin: LayoutCss.mb1,
-    decoration: BoxDecoration(
-      color: const Color(0xFFEEE0D2),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: const Color(0xFF9A8F83)
-      )
-    ),
+    margin: LayoutCss.mb3,
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Image(image: AssetImage(animal.headShotImg))
-          )
-        ),
-        Expanded(
-          flex: 2,
-          child: QuestionButton(onTap: state.doQuestionOnTap)
+        QuestionButton(
+          onTap: state.doQuestionOnTap, 
+          animalImg: animal.headShotImg,
+          isShining: state.isTalking
         )
       ]
     )
@@ -405,10 +414,10 @@ Widget _btnGrpUI(_AnimalPageState state, BuildContext context, BoxConstraints co
 
   return Container(
     decoration: BoxDecoration(
-      color: const Color(0xFFEEE0D2),
+      color: LayoutCss.surface,
       borderRadius: BorderRadius.circular(8),
       border: Border.all(
-        color: const Color(0xFFD1C5B7)
+        color: LayoutCss.surfaceBorder
       )
     ),
     child: Column(
@@ -454,18 +463,18 @@ List<Animal> getInitAnimals() {
       correctAnimate: 'assets/videos/dinosaur_correct.mp4', 
       errAnimate: 'assets/videos/dinosaur_correct.mp4',
       quesAudios: [
-        'sounds/dinosaur/q1.wav',
-        'sounds/dinosaur/q1.wav',
-        'sounds/dinosaur/q1.wav'
+        'sounds/dinosaur/q1.mp3',
+        'sounds/dinosaur/q2.mp3',
+        'sounds/dinosaur/q3.mp3'
       ],
       floorAudios: {
-        -2: 'sounds/dinosaur/floorB2.wav',
-        -1: 'sounds/dinosaur/floorB1.wav',
-        0: 'sounds/dinosaur/floor1.wav',
-        1: 'sounds/dinosaur/floor2.wav',
-        2: 'sounds/dinosaur/floor3.wav',
-        3: 'sounds/dinosaur/floor4.wav',
-        4: 'sounds/dinosaur/floor5.wav'
+        -2: 'sounds/dinosaur/floorB2.mp3',
+        -1: 'sounds/dinosaur/floorB1.mp3',
+        0: 'sounds/dinosaur/floor1.mp3',
+        1: 'sounds/dinosaur/floor2.mp3',
+        2: 'sounds/dinosaur/floor3.mp3',
+        3: 'sounds/dinosaur/floor4.mp3',
+        4: 'sounds/dinosaur/floor5.mp3'
       }
     ),
     // const Animal(headShotImg: 'assets/images/animal_page/dog_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
