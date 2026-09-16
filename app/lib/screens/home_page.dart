@@ -18,6 +18,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: LayoutCss.defaultBG,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
