@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'panel_page.dart';
+import 'animal_page.dart';
 
 import '../models/enums.dart';
 
@@ -38,7 +39,7 @@ class HomePage extends ConsumerWidget {
               () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PanelPage())
+                  MaterialPageRoute(builder: (context) => const AnimalPage())
                 );
               }
             ),

@@ -9,3 +9,9 @@ class Elevator {
 
   DateTime? openedAt; // 門開啟時間點
 }
+
+class AnimalElevator {
+  Direction direction = Direction.idle;
+  int currentFloor = 0;
+  bool allowControl = true;
+}

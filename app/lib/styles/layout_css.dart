@@ -9,4 +9,14 @@ class LayoutCss {
   static const Color primary = Color(0xFFF4A259);
   static const Color secondary = Color(0xFF7FB685);
   static const Color accent = Color(0xFFE8998D);
+
+  static const EdgeInsets m1 = EdgeInsets.all(5),
+                          m2 = EdgeInsets.all(10),
+                          m3 = EdgeInsets.all(15),
+                          mt1 = EdgeInsets.only(top: 5),
+                          mt2 = EdgeInsets.only(top: 10),
+                          mt3= EdgeInsets.only(top: 15),
+                          mb1 = EdgeInsets.only(bottom: 5),
+                          mb2 = EdgeInsets.only(bottom: 10),
+                          mb3= EdgeInsets.only(bottom: 15);
 }
