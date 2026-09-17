@@ -461,7 +461,7 @@ List<Animal> getInitAnimals() {
     const Animal(
       headShotImg: 'assets/images/animal_page/dinosaur_headshot.png', 
       correctAnimate: 'assets/videos/dinosaur_correct.mp4', 
-      errAnimate: 'assets/videos/dinosaur_correct.mp4',
+      errAnimate: 'assets/videos/dinosaur_error.mp4',
       quesAudios: [
         'sounds/dinosaur/q1.mp3',
         'sounds/dinosaur/q2.mp3',
