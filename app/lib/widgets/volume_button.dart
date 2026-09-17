@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/enums.dart';
 
+import '../styles/layout_css.dart';
+
 class VolumeButton extends StatelessWidget {
   const VolumeButton(
       {super.key,
@@ -24,6 +26,15 @@ class VolumeButton extends StatelessWidget {
       icon = isAllow ? Icons.music_note : Icons.music_off;
     }
 
-    return IconButton(icon: Icon(icon), onPressed: onPressed);
+    return IconButton(
+      icon: Icon(icon), 
+      style: IconButton.styleFrom(
+        foregroundColor: LayoutCss.primary7,
+        backgroundColor: LayoutCss.surface,
+        shape: const CircleBorder(),
+        elevation: 6,
+        // side: const BorderSide(color: LayoutCss.neutral2)
+      ),
+      onPressed: onPressed);
   }
 }

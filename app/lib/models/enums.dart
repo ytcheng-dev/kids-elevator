@@ -41,3 +41,9 @@ enum VolumeType {
   sfx, // 音效
   voice // 語音
 }
+
+/// 主選單按鈕
+enum MenuButtonTarget {
+  panel,    // 面板模式
+  animal    // 動物模式
+}

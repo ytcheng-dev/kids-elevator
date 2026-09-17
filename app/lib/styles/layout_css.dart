@@ -55,13 +55,36 @@ class LayoutCss {
                      text1 = neutral5,       // 主要文字
                      text2 = neutral6;       // 次要文字
 
-  static const EdgeInsets m1 = EdgeInsets.all(5),
-                          m2 = EdgeInsets.all(10),
-                          m3 = EdgeInsets.all(15),
-                          mt1 = EdgeInsets.only(top: 5),
-                          mt2 = EdgeInsets.only(top: 10),
-                          mt3= EdgeInsets.only(top: 15),
-                          mb1 = EdgeInsets.only(bottom: 5),
-                          mb2 = EdgeInsets.only(bottom: 10),
-                          mb3= EdgeInsets.only(bottom: 15);
+  // 文字大小
+  static double textSizeBase = 0;
+
+  static double get h1 => textSizeBase * 2;
+  static double get h2 => textSizeBase * 1.75;
+  static double get h3 => textSizeBase * 1.5;
+  static double get h4 => textSizeBase * 1.25;
+  static double get h5 => textSizeBase * 1;
+  static double get h6 => textSizeBase * 0.75;
+
+  // margin, padding
+  static double marginBase = 0;
+
+  static EdgeInsets get m1 => EdgeInsets.all(marginBase);
+  static EdgeInsets get m2 => EdgeInsets.all(marginBase * 2);
+  static EdgeInsets get m3 => EdgeInsets.all(marginBase * 3);
+  static EdgeInsets get mt1 => EdgeInsets.only(top: marginBase);
+  static EdgeInsets get mt2 => EdgeInsets.only(top: marginBase * 2);
+  static EdgeInsets get mt3 => EdgeInsets.only(top: marginBase * 3);
+  static EdgeInsets get mb1 => EdgeInsets.only(bottom: marginBase);
+  static EdgeInsets get mb2 => EdgeInsets.only(bottom: marginBase * 2);
+  static EdgeInsets get mb3 => EdgeInsets.only(bottom: marginBase * 3);
+
+  static EdgeInsets get p1 => EdgeInsets.all(marginBase);
+  static EdgeInsets get p2 => EdgeInsets.all(marginBase * 2);
+  static EdgeInsets get p3 => EdgeInsets.all(marginBase * 3);
+  static EdgeInsets get pt1 => EdgeInsets.only(top: marginBase);
+  static EdgeInsets get pt2 => EdgeInsets.only(top: marginBase * 2);
+  static EdgeInsets get pt3 => EdgeInsets.only(top: marginBase * 3);
+  static EdgeInsets get pb1 => EdgeInsets.only(bottom: marginBase);
+  static EdgeInsets get pb2 => EdgeInsets.only(bottom: marginBase * 2);
+  static EdgeInsets get pb3 => EdgeInsets.only(bottom: marginBase * 3);
 }
