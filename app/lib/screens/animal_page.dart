@@ -36,14 +36,29 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
   final List<Animal> animalList = getInitAnimals();
 
   final Map<int, FloorButton> floorMap = {
-    -2: FloorButton(title: 'B2', audioFile: 'sounds/floor_B2.mp3'),
-    -1: FloorButton(title: 'B1', audioFile: 'sounds/floor_B1.mp3'),
-    0: FloorButton(title: '1', audioFile: 'sounds/floor_1.mp3'),
-    1: FloorButton(title: '2', audioFile: 'sounds/floor_2.mp3'),
-    2: FloorButton(title: '3', audioFile: 'sounds/floor_3.mp3'),
-    3: FloorButton(title: '4', audioFile: 'sounds/floor_4.mp3'),
-    4: FloorButton(title: '5', audioFile: 'sounds/floor_5.mp3')
+    -2: FloorButton(title: 'B2', audioFile: 'sounds/panel/floor_B2.mp3'),
+    -1: FloorButton(title: 'B1', audioFile: 'sounds/panel/floor_B1.mp3'),
+    0: FloorButton(title: '1', audioFile: 'sounds/panel/floor_1.mp3'),
+    1: FloorButton(title: '2', audioFile: 'sounds/panel/floor_2.mp3'),
+    2: FloorButton(title: '3', audioFile: 'sounds/panel/floor_3.mp3'),
+    3: FloorButton(title: '4', audioFile: 'sounds/panel/floor_4.mp3'),
+    4: FloorButton(title: '5', audioFile: 'sounds/panel/floor_5.mp3')
   };
+
+  final List<String> quesAudios = [
+        'sounds/animal/q1.mp3',
+        'sounds/animal/q2.mp3',
+        'sounds/animal/q3.mp3'
+      ];
+  final Map<int, String> floorAudios = {
+        -2: 'sounds/animal/floorB2.mp3',
+        -1: 'sounds/animal/floorB1.mp3',
+        0: 'sounds/animal/floor1.mp3',
+        1: 'sounds/animal/floor2.mp3',
+        2: 'sounds/animal/floor3.mp3',
+        3: 'sounds/animal/floor4.mp3',
+        4: 'sounds/animal/floor5.mp3'
+      };
 
   final AnimalElevator elevator = AnimalElevator();
 
@@ -215,7 +230,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
         });
 
         requestVoicePlayer(
-          fileName: 'sounds/ding.mp3', 
+          fileName: 'sounds/panel/ding.mp3', 
           cb: () {
             setElevatorDirection(Direction.idle);
 
@@ -283,11 +298,11 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
       isTalking = true;
     });
 
-    int randQ = random.nextInt(currentAnimal.quesAudios.length);
+    int randQ = random.nextInt(quesAudios.length);
 
-    requestVoicePlayer(fileName: currentAnimal.quesAudios[randQ]);
+    requestVoicePlayer(fileName: quesAudios[randQ]);
     requestVoicePlayer(
-      fileName: currentAnimal.floorAudios[answerFloorKey]!, 
+      fileName: floorAudios[answerFloorKey]!, 
       cb: () {
         setState(() {
           isTalking = false;
@@ -461,25 +476,15 @@ List<Animal> getInitAnimals() {
     const Animal(
       headShotImg: 'assets/images/animal_page/dinosaur_headshot.png', 
       correctAnimate: 'assets/videos/dinosaur_correct.mp4', 
-      errAnimate: 'assets/videos/dinosaur_error.mp4',
-      quesAudios: [
-        'sounds/dinosaur/q1.mp3',
-        'sounds/dinosaur/q2.mp3',
-        'sounds/dinosaur/q3.mp3'
-      ],
-      floorAudios: {
-        -2: 'sounds/dinosaur/floorB2.mp3',
-        -1: 'sounds/dinosaur/floorB1.mp3',
-        0: 'sounds/dinosaur/floor1.mp3',
-        1: 'sounds/dinosaur/floor2.mp3',
-        2: 'sounds/dinosaur/floor3.mp3',
-        3: 'sounds/dinosaur/floor4.mp3',
-        4: 'sounds/dinosaur/floor5.mp3'
-      }
+      errAnimate: 'assets/videos/dinosaur_error.mp4'
     ),
     // const Animal(headShotImg: 'assets/images/animal_page/dog_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
     // const Animal(headShotImg: 'assets/images/animal_page/cat_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
-    // const Animal(headShotImg: 'assets/images/animal_page/elephant_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
+    const Animal(
+      headShotImg: 'assets/images/animal_page/elephant_headshot.png', 
+      correctAnimate: 'assets/videos/elephant_correct.mp4', 
+      errAnimate: 'assets/videos/dinosaur_error.mp4'
+    ),
     // const Animal(headShotImg: 'assets/images/animal_page/rabbit_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4')
   ];
 }

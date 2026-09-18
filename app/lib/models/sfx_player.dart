@@ -14,7 +14,7 @@ class SfxPlayer {
   }
 
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final String audioFile = 'sounds/button.mp3';
+  final String audioFile = 'sounds/panel/button.mp3';
 
   bool isPlaying = false; // 是否正在播放
 

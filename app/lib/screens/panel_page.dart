@@ -38,13 +38,13 @@ class _PanelPageState extends ConsumerState<PanelPage>
   final int minFloor = -2;
 
   final Map<int, FloorButton> floorMap = {
-    -2: FloorButton(title: 'B2', audioFile: 'sounds/floor_B2.mp3'),
-    -1: FloorButton(title: 'B1', audioFile: 'sounds/floor_B1.mp3'),
-    0: FloorButton(title: '1', audioFile: 'sounds/floor_1.mp3'),
-    1: FloorButton(title: '2', audioFile: 'sounds/floor_2.mp3'),
-    2: FloorButton(title: '3', audioFile: 'sounds/floor_3.mp3'),
-    3: FloorButton(title: '4', audioFile: 'sounds/floor_4.mp3'),
-    4: FloorButton(title: '5', audioFile: 'sounds/floor_5.mp3')
+    -2: FloorButton(title: 'B2', audioFile: 'sounds/panel/floor_B2.mp3'),
+    -1: FloorButton(title: 'B1', audioFile: 'sounds/panel/floor_B1.mp3'),
+    0: FloorButton(title: '1', audioFile: 'sounds/panel/floor_1.mp3'),
+    1: FloorButton(title: '2', audioFile: 'sounds/panel/floor_2.mp3'),
+    2: FloorButton(title: '3', audioFile: 'sounds/panel/floor_3.mp3'),
+    3: FloorButton(title: '4', audioFile: 'sounds/panel/floor_4.mp3'),
+    4: FloorButton(title: '5', audioFile: 'sounds/panel/floor_5.mp3')
   };
 
   final Map<ActionType, ActionButton> actionMap = {
@@ -52,12 +52,12 @@ class _PanelPageState extends ConsumerState<PanelPage>
         btnType: ActionType.open,
         title: '開門',
         iconCode: Icons.unfold_more_outlined,
-        audioFile: 'sounds/open_door.mp3'),
+        audioFile: 'sounds/panel/open_door.mp3'),
     ActionType.close: ActionButton(
         btnType: ActionType.close,
         title: '關門',
         iconCode: Icons.unfold_less_outlined,
-        audioFile: 'sounds/close_door.mp3')
+        audioFile: 'sounds/panel/close_door.mp3')
   };
 
   final TimerManager _timerManager = TimerManager();
@@ -182,7 +182,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
       if (floorMap[elevator.currentFloor]!.isTarget) {
         // 到達目標樓層
         // 語音
-        requestVoicePlayer(fileName: 'sounds/ding.mp3', cb: stopAnimate);
+        requestVoicePlayer(fileName: 'sounds/panel/ding.mp3', cb: stopAnimate);
 
         requestVoicePlayer(
             fileName: floorMap[elevator.currentFloor]!.audioFile,
