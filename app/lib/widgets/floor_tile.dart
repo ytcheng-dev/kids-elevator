@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../models/panel_buttons.dart';
+import '../models/panel_buttons.dart';
+
+import '../styles/layout_css.dart';
 
 class FloorTile extends StatefulWidget {
   const FloorTile ({
@@ -20,7 +22,10 @@ class FloorTile extends StatefulWidget {
 class _FloorTileState extends State<FloorTile> {
   _FloorTileState();
 
-  bool isPressed = false;
+  bool _isPressed = false;
+
+  final Color highlightColor = LayoutCss.secondary5,
+              shadowColor = LayoutCss.neutral2;
 
   @override
   Widget build(BuildContext context) {
@@ -28,28 +33,28 @@ class _FloorTileState extends State<FloorTile> {
       onTap: widget.onTap,
       onTapDown: (tapDownDetails) {
         setState(() {
-          isPressed = true;
+          _isPressed = true;
         });
       },
       onTapUp: (tapUpDetails) {
         setState(() {
-          isPressed = false;
+          _isPressed = false;
         });
       },
       onTapCancel: () {
         setState(() {
-          isPressed = false;
+          _isPressed = false;
         });
       },
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),
+        padding: LayoutCss.p2,
         decoration: BoxDecoration(
-          color: widget.floorButton.isTarget ? const Color(0xFFFFEDE2) : Colors.white,
+          color: widget.floorButton.isTarget ? LayoutCss.secondary2 : LayoutCss.secondary0,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFFDDD6CC),
-            width: 1
+            color: widget.floorButton.isTarget ? highlightColor : shadowColor,
+            width: 3
           ),
           boxShadow: [_getShadow()]
         ),
@@ -61,7 +66,7 @@ class _FloorTileState extends State<FloorTile> {
             style: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: widget.floorButton.isTarget ? const Color(0xFF6D3A00) : Colors.black
+              color: widget.floorButton.isTarget ? highlightColor : LayoutCss.text1
             )
           )
         )
@@ -71,24 +76,24 @@ class _FloorTileState extends State<FloorTile> {
 
   BoxShadow _getShadow() {
     if (widget.floorButton.isTarget) {
-      return const BoxShadow(
-        color: Color(0xFF6D3A00),
-        offset: Offset(0, 5),
-        blurRadius: 3
+      return BoxShadow(
+        color: highlightColor,
+        offset: const Offset(0, 5),
+        blurRadius: 0
       );
     }
     else {
-      return isPressed ? 
-            const BoxShadow(
-              color: Color(0xFF665D52),
-              offset: Offset(0,1),
-              blurRadius: 1
+      return _isPressed ? 
+            BoxShadow(
+              color: shadowColor,
+              offset: const Offset(0,1),
+              blurRadius: 0
             )
            : 
-            const BoxShadow(
-              color: Color(0xFF665D52),
-              offset: Offset(0,5),
-              blurRadius: 3
+            BoxShadow(
+              color: shadowColor,
+              offset: const Offset(0,5),
+              blurRadius: 0
             );
           
     }

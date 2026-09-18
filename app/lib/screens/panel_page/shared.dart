@@ -7,18 +7,26 @@ Widget _mainFloorScreen(_PanelPageState state) {
       floorText: state.floorMap[state.elevator.currentFloor]!.title);
 }
 
-Widget _getFloorTile(_PanelPageState state, int btnKey) {
+Widget _getFloorTile(_PanelPageState state, int btnKey, double btnWidth, double btnHeight) {
   FloorButton floorButton = state.floorMap[btnKey]!;
 
-  return FloorTile(
-      floorButton: floorButton,
-      onTap: () {
-        state.floorTileOnTap(floorButton, btnKey);
-      });
+  return SizedBox(
+      width: btnWidth,
+      height: btnHeight,
+      child: FloorTile(
+          floorButton: floorButton,
+          onTap: () {
+            state.floorTileOnTap(floorButton, btnKey);
+        }
+      )  
+    );
 }
 
-Widget _getDoorButton(_PanelPageState state, ActionButton actionButton) {
-  return DoorButton(
+Widget _getDoorButton(_PanelPageState state, ActionButton actionButton, double btnWidth, double btnHeight) {
+  return SizedBox(
+    width: btnWidth,
+    height: btnHeight,
+    child: DoorButton(
       actionButton: actionButton,
       onTap: () {
         state.doorButtonOnTap(actionButton);
@@ -28,7 +36,8 @@ Widget _getDoorButton(_PanelPageState state, ActionButton actionButton) {
           : state.doOpenLongPressStart,
       onLongPressEnd: actionButton.btnType == ActionType.close
           ? null
-          : state.doOpenLongPressEnd);
+          : state.doOpenLongPressEnd)
+  );
 }
 
 Widget _getHomeButton(_PanelPageState state) {

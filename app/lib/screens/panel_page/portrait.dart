@@ -47,51 +47,57 @@ Widget _portraitButtonGrpBuilder(
   double maxWidth = constraints.maxWidth;
   double maxHeight = constraints.maxHeight;
 
-  double btnWidth = maxWidth * CSSManager.shortSidePercent,
-      btnHeight = maxHeight * CSSManager.longSidePercent,
-      btnSize = min(btnWidth, btnHeight);
+  double btnWidth =  maxWidth * 0.8 * 0.5,
+         btnHeight = maxHeight * 0.9 * 0.2;
 
-  return Column(
+  return Container(
+    padding: LayoutCss.p1,
+    decoration: BoxDecoration(
+      color: LayoutCss.surface,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        color: LayoutCss.surfaceBorder,
+        width: 3
+      )
+    ),
+    child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorTile(state, 4), btnSize),
-            SizedBox(width: btnSize),
+            _getFloorTile(state, 4, btnWidth, btnHeight),
+            SizedBox(width: btnWidth),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorTile(state, 2), btnSize),
-            CSSManager.getButtonBox(_getFloorTile(state, 3), btnSize),
+            _getFloorTile(state, 2, btnWidth, btnHeight),
+            _getFloorTile(state, 3, btnWidth, btnHeight),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorTile(state, 0), btnSize),
-            CSSManager.getButtonBox(_getFloorTile(state, 1), btnSize),
+            _getFloorTile(state, 0, btnWidth, btnHeight),
+            _getFloorTile(state, 1, btnWidth, btnHeight),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorTile(state, -1), btnSize),
-            CSSManager.getButtonBox(_getFloorTile(state, -2), btnSize),
+            _getFloorTile(state, -1, btnWidth, btnHeight),
+            _getFloorTile(state, -2, btnWidth, btnHeight),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(
-                _getDoorButton(state, state.actionMap[ActionType.open]!),
-                btnSize),
-            CSSManager.getButtonBox(
-                _getDoorButton(state, state.actionMap[ActionType.close]!),
-                btnSize),
+            _getDoorButton(state, state.actionMap[ActionType.open]!, btnWidth, btnHeight),
+            _getDoorButton(state, state.actionMap[ActionType.close]!, btnWidth, btnHeight)
           ],
         )
-      ]);
+      ])
+    );
 }

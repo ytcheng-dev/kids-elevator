@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/panel_buttons.dart';
 
-import '../../styles/panel_page.dart';
+import '../../styles/layout_css.dart';
 
 class DoorButton extends StatefulWidget {
   const DoorButton(
@@ -26,6 +26,9 @@ class DoorButton extends StatefulWidget {
 
 class _DoorButtonState extends State<DoorButton> {
   _DoorButtonState();
+
+  final Color highlightColor = LayoutCss.secondary5,
+                shadowColor = LayoutCss.neutral2;
 
   bool _isPressed = false;
 
@@ -59,8 +62,17 @@ class _DoorButtonState extends State<DoorButton> {
           },
           child: Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              decoration: CSSManager.buttonDecoration(_isPressed),
+              padding: LayoutCss.p2,
+              decoration: BoxDecoration(
+                color: _isPressed ? LayoutCss.secondary2 : LayoutCss.secondary0,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: _isPressed ? highlightColor : shadowColor
+                ),
+                boxShadow: [
+                  _getShadow()
+                ]
+              ),
               child: RotatedBox(
                   quarterTurns: 1,
                   child: FittedBox(
@@ -68,8 +80,22 @@ class _DoorButtonState extends State<DoorButton> {
                       child: Icon(widget.actionButton.iconCode,
                           size: 60,
                           color: _isPressed
-                              ? CSSManager.highlight
-                              : CSSManager.defaultBlack)))),
+                              ? highlightColor
+                              : LayoutCss.text1)))),
         ));
+  }
+  BoxShadow _getShadow() {
+    return _isPressed ? 
+        BoxShadow(
+          color: shadowColor,
+          offset: const Offset(0,1),
+          blurRadius: 0
+        )
+        : 
+        BoxShadow(
+          color: shadowColor,
+          offset: const Offset(0,5),
+          blurRadius: 0
+        );
   }
 }

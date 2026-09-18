@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/enums.dart';
 
-import '../styles/panel_page.dart';
+import '../styles/layout_css.dart';
 
 class ArrowIcon extends StatelessWidget {
   const ArrowIcon({super.key, required this.directionIcon});
@@ -15,19 +15,19 @@ class ArrowIcon extends StatelessWidget {
 
     switch (directionIcon) {
       case ScreenIcon.up:
-        rtnIcon = const Icon(Icons.arrow_upward, color: Colors.green, size: 96);
+        rtnIcon = const Icon(Icons.arrow_upward, color: LayoutCss.primary, size: 96);
         break;
       case ScreenIcon.down:
         rtnIcon =
-            const Icon(Icons.arrow_downward, color: Colors.green, size: 96);
+            const Icon(Icons.arrow_downward, color: LayoutCss.primary, size: 96);
         break;
       case ScreenIcon.left:
         rtnIcon = const Icon(Icons.chevron_left,
-            color: CSSManager.screenText, size: 96);
+            color: LayoutCss.secondary, size: 96);
         break;
       case ScreenIcon.right:
         rtnIcon = const Icon(Icons.chevron_right,
-            color: CSSManager.screenText, size: 96);
+            color: LayoutCss.secondary, size: 96);
         break;
     }
 

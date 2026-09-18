@@ -14,7 +14,7 @@ import '../models/voice_player.dart';
 import '../models/sfx_player.dart';
 
 import '../widgets/animal_page/direction_icon.dart';
-import '../widgets/animal_page/floor_tile.dart';
+import '../widgets/floor_tile.dart';
 import '../widgets/animal_page/question_button.dart';
 import '../widgets/back_leading.dart';
 

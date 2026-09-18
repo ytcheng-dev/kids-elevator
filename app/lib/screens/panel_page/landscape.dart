@@ -43,9 +43,9 @@ Widget _landscapeFloorScreen(
       floorScreenHeight = maxHeight * 0.7,
       btnPaletHeight = maxHeight * 0.25,
       screenAspectRatio = 1.5,
-      floorScreenWidth = floorScreenHeight * screenAspectRatio;
-
-  double btnSize = min(floorScreenWidth * 0.3, btnPaletHeight * 0.8);
+      floorScreenWidth = floorScreenHeight * screenAspectRatio,
+      btnWidth = floorScreenWidth * 0.3,
+      btnHeight = btnPaletHeight * 0.8;
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -60,12 +60,8 @@ Widget _landscapeFloorScreen(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              CSSManager.getButtonBox(
-                  _getDoorButton(state, state.actionMap[ActionType.open]!),
-                  btnSize),
-              CSSManager.getButtonBox(
-                  _getDoorButton(state, state.actionMap[ActionType.close]!),
-                  btnSize),
+              _getDoorButton(state, state.actionMap[ActionType.open]!, btnWidth, btnHeight),
+              _getDoorButton(state, state.actionMap[ActionType.close]!, btnWidth, btnHeight)
             ],
           ))
     ],
@@ -77,9 +73,9 @@ Widget _landscapeButtonGrpBuilder(
   double maxWidth = constraints.maxWidth;
   double maxHeight = constraints.maxHeight;
 
-  double btnWidth = maxWidth * CSSManager.longSidePercent,
-      btnHeight = maxHeight * CSSManager.shortSidePercent,
-      btnSize = min(btnWidth, btnHeight);
+  double btnWidth = maxWidth * PanelPageCss.longSidePercent,
+         btnHeight = maxHeight * PanelPageCss.shortSidePercent,
+         btnSize = min(btnWidth, btnHeight);
 
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -87,28 +83,28 @@ Widget _landscapeButtonGrpBuilder(
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          CSSManager.getButtonBox(_getFloorTile(state, 4), btnSize),
-          CSSManager.getButtonBox(_getFloorTile(state, 0), btnSize),
+          _getFloorTile(state, 4, btnSize, btnSize),
+          _getFloorTile(state, 0, btnSize, btnSize),
         ],
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          CSSManager.getButtonBox(_getFloorTile(state, 3), btnSize),
-          CSSManager.getButtonBox(_getFloorTile(state, -1), btnSize),
+          _getFloorTile(state, 3, btnSize, btnSize),
+          _getFloorTile(state, -1, btnSize, btnSize),
         ],
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          CSSManager.getButtonBox(_getFloorTile(state, 2), btnSize),
-          CSSManager.getButtonBox(_getFloorTile(state, -2), btnSize),
+          _getFloorTile(state, 2, btnSize, btnSize),
+          _getFloorTile(state, -2, btnSize, btnSize),
         ],
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          CSSManager.getButtonBox(_getFloorTile(state, 1), btnSize),
+          _getFloorTile(state, 1, btnSize, btnSize),
           SizedBox(height: btnSize),
         ],
       ),

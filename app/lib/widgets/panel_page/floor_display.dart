@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/animate_offset.dart';
 import '../../models/elevator.dart';
 
-import '../../styles/panel_page.dart';
+import '../../styles/layout_css.dart';
 
 import 'direction_icon.dart';
 
@@ -22,9 +22,16 @@ class FloorDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        margin: LayoutCss.mb1,
+        decoration: BoxDecoration(
+          color: LayoutCss.neutral9,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: LayoutCss.neutral8,
+            width: 10
+          )
+        ),
         clipBehavior: Clip.hardEdge,
-        decoration: const BoxDecoration(color: Colors.black),
-        padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -34,8 +41,10 @@ class FloorDisplay extends StatelessWidget {
                     fit: BoxFit.contain,
                     child: Text(floorText,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: CSSManager.screenText, fontSize: 72))))
+                        style: TextStyle(
+                            color: LayoutCss.secondary, 
+                            fontSize: LayoutCss.h1
+                          ))))
           ],
         ));
   }
