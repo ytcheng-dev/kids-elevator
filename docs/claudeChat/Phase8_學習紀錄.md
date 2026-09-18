@@ -186,8 +186,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     double maxWidth = constraints.maxWidth;
     double maxHeight = constraints.maxHeight;
 
-    double btnWidth = maxWidth * CSSManager.shortSidePercent,
-           btnHeight = maxHeight * CSSManager.longSidePercent,
+    double btnWidth = maxWidth * PanelPageCss.shortSidePercent,
+           btnHeight = maxHeight * PanelPageCss.longSidePercent,
            btnSize = min(btnWidth, btnHeight);
 
     return Column(
@@ -196,36 +196,36 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
             SizedBox(width: btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getActionButton(actionMap[ActionType.open]!), btnSize),
-            CSSManager.getButtonBox(_getActionButton(actionMap[ActionType.close]!), btnSize),
+            PanelPageCss.getButtonBox(_getActionButton(actionMap[ActionType.open]!), btnSize),
+            PanelPageCss.getButtonBox(_getActionButton(actionMap[ActionType.close]!), btnSize),
           ],
         )
       ]
@@ -278,8 +278,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              CSSManager.getButtonBox(_getActionButton(actionMap[ActionType.open]!), btnSize),
-              CSSManager.getButtonBox(_getActionButton(actionMap[ActionType.close]!), btnSize),
+              PanelPageCss.getButtonBox(_getActionButton(actionMap[ActionType.open]!), btnSize),
+              PanelPageCss.getButtonBox(_getActionButton(actionMap[ActionType.close]!), btnSize),
             ],
           )
         )
@@ -304,7 +304,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               child: Text(
                 floorMap[elevator.currentFloor]!.title, 
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: CSSManager.screenText, fontSize: 72)
+                style: const TextStyle(color: PanelPageCss.screenText, fontSize: 72)
               )
             )
           )
@@ -317,8 +317,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     double maxWidth = constraints.maxWidth;
     double maxHeight = constraints.maxHeight;
 
-    double btnWidth = maxWidth * CSSManager.longSidePercent,
-           btnHeight = maxHeight * CSSManager.shortSidePercent,
+    double btnWidth = maxWidth * PanelPageCss.longSidePercent,
+           btnHeight = maxHeight * PanelPageCss.shortSidePercent,
            btnSize = min(btnWidth, btnHeight);
 
     return Row(
@@ -327,28 +327,28 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
             SizedBox(height: btnSize),
           ],
         ),
@@ -428,10 +428,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         rtnIcon = const Icon(Icons.arrow_downward, color: Colors.green, size: 96);
       break;
       case ScreenIcon.left:
-        rtnIcon = const Icon(Icons.chevron_left, color: CSSManager.screenText, size: 96);
+        rtnIcon = const Icon(Icons.chevron_left, color: PanelPageCss.screenText, size: 96);
       break;
       case ScreenIcon.right:
-        rtnIcon = const Icon(Icons.chevron_right, color: CSSManager.screenText, size: 96);
+        rtnIcon = const Icon(Icons.chevron_right, color: PanelPageCss.screenText, size: 96);
       break;
     }
 
@@ -448,13 +448,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
-        decoration: CSSManager.buttonDecoration(myFloor.isTarget),
+        decoration: PanelPageCss.buttonDecoration(myFloor.isTarget),
         child: FittedBox(
           fit: BoxFit.contain,
           child: Text(
             myFloor.title, 
             textAlign: TextAlign.center,
-            style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack, fontSize: 48)
+            style: TextStyle(color: myFloor.isTarget ? PanelPageCss.highlight : PanelPageCss.defaultBlack, fontSize: 48)
           )
         )
       ),
@@ -507,7 +507,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(10),
-          decoration: CSSManager.buttonDecoration(actButton.isPressed),
+          decoration: PanelPageCss.buttonDecoration(actButton.isPressed),
           child: RotatedBox(
             quarterTurns: 1,
             child: FittedBox(
@@ -515,7 +515,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               child: Icon(
                 actButton.iconCode,
                 size: 60,
-                color: actButton.isPressed ? CSSManager.highlight : CSSManager.defaultBlack
+                color: actButton.isPressed ? PanelPageCss.highlight : PanelPageCss.defaultBlack
               )
             )
           )
@@ -797,7 +797,7 @@ class ActionButton {
   bool isPressed = false;
 }
 
-class CSSManager {
+class PanelPageCss {
   static const Color backgroundGray = Color(0xFFCCC3CD);
   static const Color defaultBlack = Color(0xFF757382);
   static const Color highlight = Color(0xFFAD6777);

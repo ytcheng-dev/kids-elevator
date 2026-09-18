@@ -20,7 +20,7 @@ lib/
 │   ├── board_button.dart              # FloorButton + ActionButton
 │   └── animate_offset.dart            # AnimateOffset：6 組動畫 Offset
 ├── styles/
-│   └── css_manager.dart               # CSSManager：顏色/尺寸常數與樣式方法
+│   └── css_manager.dart               # PanelPageCss：顏色/尺寸常數與樣式方法
 ├── widgets/
 │   ├── arrow_icon.dart                # ArrowIcon
 │   ├── door_button.dart               # DoorButton
@@ -43,7 +43,7 @@ lib/
 
 ### 重點摘要
 
-- **資料/工具 class 各自獨立成檔**：5 個 enum、`Elevator`、`TimerManager`、`FloorButton`/`ActionButton`、`CSSManager` 全部拆到 `models/`／`styles/`，`main.dart` 瘦身到只剩 `MyApp`。
+- **資料/工具 class 各自獨立成檔**：5 個 enum、`Elevator`、`TimerManager`、`FloorButton`/`ActionButton`、`PanelPageCss` 全部拆到 `models/`／`styles/`，`main.dart` 瘦身到只剩 `MyApp`。
 - **「回傳 Widget 的方法」改寫成獨立 `StatelessWidget` class**：`ArrowIcon`、`DoorButton`、`FloorTile`、`DirectionIcon`、`FloorDisplay` 五個元件，依複雜度分級（純輸入輸出 → 需要 callback → 需要共用動畫狀態）依序抽出。
 - **新增 `AnimateOffset` class**：把原本 `_MyHomePageState` 裡 6 個 `Animation<Offset>` 欄位的計算邏輯，搬到獨立 class 的建構子初始化列表中，只把算好的 `Animation<Offset>` 往下傳給 `DirectionIcon`，`AnimationController` 本身仍留在 `_MyHomePageState`。
 - **橫式／直式版面用 `part`/`part of` 拆開管理**：`screens/home_page.dart` 是主檔案（唯一能宣告 `import`），`portrait.dart`／`landscape.dart` 用 `part of` 共用同一個 library 的私有存取權限，得以直接操作 `_MyHomePageState` 的私有欄位/方法。

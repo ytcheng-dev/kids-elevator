@@ -9,13 +9,13 @@
 把 Phase 5 完成、但外觀完全是預設純色 `Container` 的電梯面板，實際套上顏色、圓角、陰影、字體、間距等靜態視覺樣式，並比對真實電梯面板照片調整風格：
 
 - 樓層按鈕改用 `BoxDecoration`（`color`/`borderRadius`/`border`）取代原本的純色 `Container`，並讓文字顏色（`TextStyle`）跟著 `isTarget` 一起變化，選中效果從「整塊變色」改成「外框＋文字變色」
-- 抽出 `CSSManager` 這個純靜態工具 class，集中管理顏色常數（`backgroundGray`/`defaultBlack`/`highlight`/`floorText`）與樣式產生邏輯（`buttonDecoration(bool isHighlight)`、`getButtonBox(Widget, double)`），解決「Flutter 沒有 CSS class 這種機制、要自己想辦法避免樣式重複」的問題
+- 抽出 `PanelPageCss` 這個純靜態工具 class，集中管理顏色常數（`backgroundGray`/`defaultBlack`/`highlight`/`floorText`）與樣式產生邏輯（`buttonDecoration(bool isHighlight)`、`getButtonBox(Widget, double)`），解決「Flutter 沒有 CSS class 這種機制、要自己想辦法避免樣式重複」的問題
 - 樓層按鈕嘗試做成正方形：用 `MediaQuery.of(context).size.width` 讀取螢幕寬度、`SizedBox` 給固定寬度（取代 `Expanded` 的相對分配）、`AspectRatio` 讓高度跟著寬度等比變化。過程中發現「只用寬度反推高度」在疊多列時會造成垂直方向 overflow，決定先用長方形（`aspectRatio: 1.5`）當簡化方案，真正兼顧寬高兩個方向的響應式正方形留給新增的 Phase 7
 - 樓層顯示區域：黑底容器＋大字級紅色數字＋綠色方向箭頭（`Icon`），箭頭依 `elevator.direction` 動態顯示上/下/無箭頭，並用 `Expanded`/`Spacer` 的對稱寫法讓樓層數字維持水平置中
 - 開門/關門按鈕改用 `Icon`（`Icons.unfold_more_outlined`/`Icons.unfold_less_outlined`）取代文字，並用 `RotatedBox(quarterTurns: 1)` 把原本垂直方向的圖示轉成水平
 - 開關門按鈕加上「按壓中」的視覺回饋（外框＋圖示顏色），用 `Listener`（`onPointerDown`/`onPointerUp`/`onPointerCancel`）追蹤按壓狀態，而不是 `GestureDetector` 的 `onTapDown`/`onTapUp`（因為長按情境下會被手勢競技場的判定邏輯錯誤地提早關閉）
 - `ActionButton` 改用 `Map<ActionType, ActionButton> actionMap`（比照 `floorMap` 的模式）在 `_MyHomePageState` 宣告一次，解決「物件在 `build()` 裡臨時建立、狀態變動在下一次重繪就被重置」的問題
-- `資料結構.md` 已同步到本次對話最終狀態（移除 `countForClose`、`ActionButton` 補上 `iconCode`/`isPressed`、新增 `actionMap`、新增 `CSSManager` 說明）
+- `資料結構.md` 已同步到本次對話最終狀態（移除 `countForClose`、`ActionButton` 補上 `iconCode`/`isPressed`、新增 `actionMap`、新增 `PanelPageCss` 說明）
 - `學習路徑總覽.md` 新增 Phase 7「響應式設計」（原 Phase 7 動畫效果依序遞延為 Phase 8，其後各 Phase 依序遞延一號），並在 Phase 8 補充 `doorStatus` 視覺呈現（含開門中/關門中的動畫）的範圍說明
 
 最終版本結構：
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(
-              width: screenWidth * CSSManager.floorScreenWidthPercent,
+              width: screenWidth * PanelPageCss.floorScreenWidthPercent,
               child: AspectRatio(
                 aspectRatio: 2,
                 child: Container(
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           floorMap[elevator.currentFloor]!.title, 
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: CSSManager.floorText, fontSize: 72)
+                          style: const TextStyle(color: PanelPageCss.floorText, fontSize: 72)
                         )
                       )
                     ],
@@ -127,39 +127,39 @@ class _MyHomePageState extends State<MyHomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), screenWidth),
-                        SizedBox(width: screenWidth * CSSManager.buttonWidthPercent),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(4), screenWidth),
+                        SizedBox(width: screenWidth * PanelPageCss.buttonWidthPercent),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(2), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(3), screenWidth),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(0), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(1), screenWidth),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), screenWidth),
-                        CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-1), screenWidth),
+                        PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-2), screenWidth),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        CSSManager.getButtonBox(
+                        PanelPageCss.getButtonBox(
                           _getActionButton(actionMap[ActionType.open]!), 
                           screenWidth
                         ),
-                        CSSManager.getButtonBox(
+                        PanelPageCss.getButtonBox(
                           _getActionButton(actionMap[ActionType.close]!), 
                           screenWidth
                         ),
@@ -205,11 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.all(10),
-        decoration: CSSManager.buttonDecoration(myFloor.isTarget),
+        decoration: PanelPageCss.buttonDecoration(myFloor.isTarget),
         child: Text(
           myFloor.title, 
           textAlign: TextAlign.center,
-          style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack, fontSize: 24)
+          style: TextStyle(color: myFloor.isTarget ? PanelPageCss.highlight : PanelPageCss.defaultBlack, fontSize: 24)
         )
       ),
       onTap: () {
@@ -265,13 +265,13 @@ class _MyHomePageState extends State<MyHomePage> {
         onLongPressEnd: actButton.btnType == ActionType.close ? null : doOpenLongPressEnd,
         child: Container(
           padding: const EdgeInsets.all(10),
-          decoration: CSSManager.buttonDecoration(actButton.isPressed),
+          decoration: PanelPageCss.buttonDecoration(actButton.isPressed),
           child: RotatedBox(
             quarterTurns: 1,
             child: Icon(
               actButton.iconCode,
               size: 48,
-              color: actButton.isPressed ? CSSManager.highlight : CSSManager.defaultBlack
+              color: actButton.isPressed ? PanelPageCss.highlight : PanelPageCss.defaultBlack
             )
           )
         ),
@@ -507,7 +507,7 @@ class ActionButton {
   bool isPressed = false;
 }
 
-class CSSManager {
+class PanelPageCss {
   static const Color backgroundGray = Color(0xFFCCC3CD);
   static const Color defaultBlack = Color(0xFF757382);
   static const Color highlight = Color(0xFFAD6777);
@@ -529,7 +529,7 @@ class CSSManager {
 
   static SizedBox getButtonBox(Widget btn, double screenWidth) {
     return SizedBox(
-      width: screenWidth * CSSManager.buttonWidthPercent,
+      width: screenWidth * PanelPageCss.buttonWidthPercent,
       child: AspectRatio(
         aspectRatio: 1.5,
         child: btn
@@ -553,7 +553,7 @@ class CSSManager {
 
 ### 3. 沒有 CSS class 這種機制，靠共用變數/函式做到 DRY
 
-Flutter 的樣式就是 Dart 物件（`BoxDecoration`/`TextStyle` 等），沒有「樣式表 + 選擇器」的機制。要避免重複，做法是把共用的值抽成 `static const`、把「怎麼組出這個樣式物件」的邏輯抽成函式（例如 `CSSManager.buttonDecoration(bool isHighlight)`）。如果這個工具 class 完全沒有需要保存的「實例狀態」，所有成員（欄位與方法）都應該宣告成 `static`，不需要 `new` 出實例才能用；`static` 純粹是「這個成員屬於 class 本身」的宣告，跟這個方法能不能接參數、回傳值完全無關。Flutter 真正對應「全域樣式表」的機制是 `Theme`/`ThemeData`，但通常用在整個 App 的基調，不是單一元件的細節樣式。
+Flutter 的樣式就是 Dart 物件（`BoxDecoration`/`TextStyle` 等），沒有「樣式表 + 選擇器」的機制。要避免重複，做法是把共用的值抽成 `static const`、把「怎麼組出這個樣式物件」的邏輯抽成函式（例如 `PanelPageCss.buttonDecoration(bool isHighlight)`）。如果這個工具 class 完全沒有需要保存的「實例狀態」，所有成員（欄位與方法）都應該宣告成 `static`，不需要 `new` 出實例才能用；`static` 純粹是「這個成員屬於 class 本身」的宣告，跟這個方法能不能接參數、回傳值完全無關。Flutter 真正對應「全域樣式表」的機制是 `Theme`/`ThemeData`，但通常用在整個 App 的基調，不是單一元件的細節樣式。
 
 ### 4. `AspectRatio`：用寬高比反推尺寸
 
@@ -561,7 +561,7 @@ Flutter 的樣式就是 Dart 物件（`BoxDecoration`/`TextStyle` 等），沒�
 
 ### 5. `MediaQuery` 只能在有 `BuildContext` 的地方用
 
-`MediaQuery.of(context).size.width` 讀取的是執行期才知道的裝置螢幕尺寸，不是編譯期常數，不能宣告成 `const`；`context` 也不是全域變數，只存在於 `build(BuildContext context)` 這類有拿到它當參數的地方，跟 widget 樹脫鉤的獨立 class（例如 `CSSManager`）沒有管道取得。要嘛在 `build()` 裡算好、當參數往下傳，要嘛讓需要用到的函式直接收 `width`/`context` 當參數。
+`MediaQuery.of(context).size.width` 讀取的是執行期才知道的裝置螢幕尺寸，不是編譯期常數，不能宣告成 `const`；`context` 也不是全域變數，只存在於 `build(BuildContext context)` 這類有拿到它當參數的地方，跟 widget 樹脫鉤的獨立 class（例如 `PanelPageCss`）沒有管道取得。要嘛在 `build()` 裡算好、當參數往下傳，要嘛讓需要用到的函式直接收 `width`/`context` 當參數。
 
 ### 6. `Column` overflow 的成因
 
@@ -598,9 +598,9 @@ Flutter 的樣式就是 Dart 物件（`BoxDecoration`/`TextStyle` 等），沒�
 | 現象/問題 | 原因/修正 |
 |---|---|
 | `Column` 加 `padding` 參數直接編譯錯誤 | `Column`/`Row`（`Flex`）沒有 `padding` 屬性，只有 `Container`/`Padding` 才有；改用 `Padding` widget 包住 `Column` |
-| 想在 `CSSManager` 用 `static const double` 直接從 `MediaQuery` 算螢幕寬度百分比 | `MediaQuery.of(context)` 需要執行期的 `context`，`const` 要求編譯期常數，且獨立的 `CSSManager` class 本身沒有 `context` 可用；改成在 `build()` 裡算好、當參數往下傳 |
+| 想在 `PanelPageCss` 用 `static const double` 直接從 `MediaQuery` 算螢幕寬度百分比 | `MediaQuery.of(context)` 需要執行期的 `context`，`const` 要求編譯期常數，且獨立的 `PanelPageCss` class 本身沒有 `context` 可用；改成在 `build()` 裡算好、當參數往下傳 |
 | 樓層按鈕改成 `AspectRatio(aspectRatio: 1)` 搭配 `screenWidth` 百分比寬度後，5 列疊加在某些螢幕比例下 overflow | `Column` 不會壓縮子元件，寬度百分比反推的高度沒有考慮實際可用垂直空間；暫時改用 `aspectRatio: 1.5` 變成長方形當簡化方案，真正雙軸響應式計算留給新增的 Phase 7 |
-| `CSSManager.getButtonBox` 參數型別寫死 `GestureDetector`，開關門按鈕外層改成 `Listener` 後編譯失敗 | `Listener` 不是 `GestureDetector` 的子型別；把參數型別放寬成 `Widget` 解決——這個型別綁太死的風險稍早已經被提醒過，後來真的發生了 |
+| `PanelPageCss.getButtonBox` 參數型別寫死 `GestureDetector`，開關門按鈕外層改成 `Listener` 後編譯失敗 | `Listener` 不是 `GestureDetector` 的子型別；把參數型別放寬成 `Widget` 解決——這個型別綁太死的風險稍早已經被提醒過，後來真的發生了 |
 | `ActionButton` 的 `icon` 欄位用「欄位宣告時的初始值」引用另一個欄位 `iconCode` | Dart 規則：欄位初始化式不能存取 `this`（含隱含的 `this.iconCode`）；改用 constructor 的 initializer list（`: icon = Icon(iconCode, ...)`），或改用 getter |
 | `iconCode` 一開始宣告成 `Icon` 型別，但 `Icon()` 建構子第一個位置參數要 `IconData` | 把 `iconCode` 型別改成 `IconData` |
 | 開關門按鈕想要「按下去變色、長按延長開門時也要維持變色」，純用 `onTapDown`/`onTapUp`/`onTapCancel` 控制 `isPressed`，長按情境下 `onTapCancel` 會在長按門檻（~500ms）提早觸發，誤關按壓中的顏色 | 改用 `Listener` 的 `onPointerDown`/`onPointerUp`/`onPointerCancel`，不受手勢競技場判定影響，只反映真實的手指觸碰狀態 |
@@ -610,7 +610,7 @@ Flutter 的樣式就是 Dart 物件（`BoxDecoration`/`TextStyle` 等），沒�
 
 ## 四、目前涵蓋範圍與尚未處理的部分
 
-**已涵蓋**：樓層按鈕靜態樣式（`BoxDecoration`：底色/圓角/邊框）＋選中效果（外框＋文字變色）；`CSSManager` 集中管理顏色與樣式產生邏輯；樓層按鈕改用 `screenWidth` 百分比＋`AspectRatio(1.5)` 做出固定比例的長方形（非真正正方形、非真正響應式）；樓層顯示區域（黑底、紅色大數字、綠色方向箭頭依 `elevator.direction` 動態呈現，並用 `Expanded`/`Spacer` 維持數字置中）；開關門按鈕改用 `Icon`（`unfold_more_outlined`/`unfold_less_outlined`）搭配 `RotatedBox` 轉 90 度；開關門按鈕按壓中的視覺回饋（`Listener` 追蹤 `isPressed`，外框與圖示顏色隨之變化，重用 `highlight` 色）；`actionMap` 模式解決物件跨 `build()` 存活的問題。
+**已涵蓋**：樓層按鈕靜態樣式（`BoxDecoration`：底色/圓角/邊框）＋選中效果（外框＋文字變色）；`PanelPageCss` 集中管理顏色與樣式產生邏輯；樓層按鈕改用 `screenWidth` 百分比＋`AspectRatio(1.5)` 做出固定比例的長方形（非真正正方形、非真正響應式）；樓層顯示區域（黑底、紅色大數字、綠色方向箭頭依 `elevator.direction` 動態呈現，並用 `Expanded`/`Spacer` 維持數字置中）；開關門按鈕改用 `Icon`（`unfold_more_outlined`/`unfold_less_outlined`）搭配 `RotatedBox` 轉 90 度；開關門按鈕按壓中的視覺回饋（`Listener` 追蹤 `isPressed`，外框與圖示顏色隨之變化，重用 `highlight` 色）；`actionMap` 模式解決物件跨 `build()` 存活的問題。
 
 **尚未處理，明確留到之後**：
 

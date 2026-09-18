@@ -15,7 +15,7 @@
 - 音效開關的放置位置一併決議：直式沿用（已改造過的）AppBar，橫式改放樓層按鈕區塊右上角；已同步更新到 `設計主軸.md`
 - 樓層按鈕、開關門圖示、方向箭頭、樓層顯示大數字，原本都是寫死的 `fontSize`/`size`，全部改用 `FittedBox` + `BoxFit.contain` 讓內容跟著按鈕/區塊實際尺寸等比例縮放（含放大）
 - `Container` 補上 `alignment: Alignment.center`，修正文字/圖示原本偏左上、沒有真正置中的問題
-- `CSSManager` 的尺寸百分比常數，從 `buttonWidthPercent`/`buttonHeightPercent` 改名為 `shortSidePercent`/`longSidePercent`——理解到這兩個常數代表的其實是「這個軸排幾個按鈕該用的百分比」（2 個一排 vs 5 個一排），是不隨螢幕方向改變的不變量，跟「寬/高」或「水平/垂直」這種容易讓人聯想錯方向的字眼是兩回事
+- `PanelPageCss` 的尺寸百分比常數，從 `buttonWidthPercent`/`buttonHeightPercent` 改名為 `shortSidePercent`/`longSidePercent`——理解到這兩個常數代表的其實是「這個軸排幾個按鈕該用的百分比」（2 個一排 vs 5 個一排），是不隨螢幕方向改變的不變量，跟「寬/高」或「水平/垂直」這種容易讓人聯想錯方向的字眼是兩回事
 - 樓層顯示框的容器（黑底＋方向箭頭＋樓層數字）抽成共用函式 `_mainFloorScreen()`，直式、橫式都呼叫同一份，減少重複
 
 最終版本結構：
@@ -142,8 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
     double maxWidth = constraints.maxWidth;
     double maxHeight = constraints.maxHeight;
 
-    double btnWidth = maxWidth * CSSManager.shortSidePercent,
-           btnHeight = maxHeight * CSSManager.longSidePercent,
+    double btnWidth = maxWidth * PanelPageCss.shortSidePercent,
+           btnHeight = maxHeight * PanelPageCss.longSidePercent,
            btnSize = min(btnWidth, btnHeight);
 
     return Column(
@@ -152,39 +152,39 @@ class _MyHomePageState extends State<MyHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
             SizedBox(width: btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(
+            PanelPageCss.getButtonBox(
               _getActionButton(actionMap[ActionType.open]!), 
               btnSize
             ),
-            CSSManager.getButtonBox(
+            PanelPageCss.getButtonBox(
               _getActionButton(actionMap[ActionType.close]!), 
               btnSize
             ),
@@ -241,11 +241,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              CSSManager.getButtonBox(
+              PanelPageCss.getButtonBox(
                 _getActionButton(actionMap[ActionType.open]!), 
                 btnSize
               ),
-              CSSManager.getButtonBox(
+              PanelPageCss.getButtonBox(
                 _getActionButton(actionMap[ActionType.close]!), 
                 btnSize
               ),
@@ -272,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 floorMap[elevator.currentFloor]!.title, 
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: CSSManager.floorText, fontSize: 72)
+                style: const TextStyle(color: PanelPageCss.floorText, fontSize: 72)
               )
             )
           )
@@ -285,8 +285,8 @@ class _MyHomePageState extends State<MyHomePage> {
     double maxWidth = constraints.maxWidth;
     double maxHeight = constraints.maxHeight;
 
-    double btnWidth = maxWidth * CSSManager.longSidePercent,
-           btnHeight = maxHeight * CSSManager.shortSidePercent,
+    double btnWidth = maxWidth * PanelPageCss.longSidePercent,
+           btnHeight = maxHeight * PanelPageCss.shortSidePercent,
            btnSize = min(btnWidth, btnHeight);
 
     return Row(
@@ -295,28 +295,28 @@ class _MyHomePageState extends State<MyHomePage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(4), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(0), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(3), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-1), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(2), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(-2), btnSize),
           ],
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            CSSManager.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
+            PanelPageCss.getButtonBox(_getFloorButtonGestureDetector(1), btnSize),
             SizedBox(height: btnSize),
           ],
         ),
@@ -361,13 +361,13 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
-        decoration: CSSManager.buttonDecoration(myFloor.isTarget),
+        decoration: PanelPageCss.buttonDecoration(myFloor.isTarget),
         child: FittedBox(
           fit: BoxFit.contain,
           child: Text(
             myFloor.title, 
             textAlign: TextAlign.center,
-            style: TextStyle(color: myFloor.isTarget ? CSSManager.highlight : CSSManager.defaultBlack, fontSize: 48)
+            style: TextStyle(color: myFloor.isTarget ? PanelPageCss.highlight : PanelPageCss.defaultBlack, fontSize: 48)
           )
         )
       ),
@@ -427,7 +427,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(10),
-          decoration: CSSManager.buttonDecoration(actButton.isPressed),
+          decoration: PanelPageCss.buttonDecoration(actButton.isPressed),
           child: RotatedBox(
             quarterTurns: 1,
             child: FittedBox(
@@ -435,7 +435,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Icon(
                 actButton.iconCode,
                 size: 60,
-                color: actButton.isPressed ? CSSManager.highlight : CSSManager.defaultBlack
+                color: actButton.isPressed ? PanelPageCss.highlight : PanelPageCss.defaultBlack
               )
             )
           )
@@ -711,7 +711,7 @@ class ActionButton {
   bool isPressed = false;
 }
 
-class CSSManager {
+class PanelPageCss {
   static const Color backgroundGray = Color(0xFFCCC3CD);
   static const Color defaultBlack = Color(0xFF757382);
   static const Color highlight = Color(0xFFAD6777);
@@ -777,7 +777,7 @@ cross 軸（例如 `Column` 的水平方向）給的是「有上限的鬆約束�
 
 ### 8. 命名與抽象：這個常數代表的是「排幾個」，不是「寬/高」
 
-`CSSManager` 裡原本想用 `width`/`length`（或更早的 `buttonWidthPercent`/`buttonHeightPercent`）描述「2 個一排該用的百分比」跟「5 個一排該用的百分比」，但這兩個字詞天生帶有「水平/垂直」的既定聯想，在橫式版面裡（5 個一排時走的是水平軸、2 個一排走的是垂直軸）用起來剛好相反，容易讓人誤讀。最後定案用 `shortSidePercent`/`longSidePercent`：5 這個數量永遠對應螢幕目前比較長的那個軸、2 永遠對應比較短的那個軸，不管直式橫式都成立，是一個跟方向無關的穩定性質，這也是為什麼同一組常數可以同時套用在兩種版面、不用為每個方向各寫一份。
+`PanelPageCss` 裡原本想用 `width`/`length`（或更早的 `buttonWidthPercent`/`buttonHeightPercent`）描述「2 個一排該用的百分比」跟「5 個一排該用的百分比」，但這兩個字詞天生帶有「水平/垂直」的既定聯想，在橫式版面裡（5 個一排時走的是水平軸、2 個一排走的是垂直軸）用起來剛好相反，容易讓人誤讀。最後定案用 `shortSidePercent`/`longSidePercent`：5 這個數量永遠對應螢幕目前比較長的那個軸、2 永遠對應比較短的那個軸，不管直式橫式都成立，是一個跟方向無關的穩定性質，這也是為什麼同一組常數可以同時套用在兩種版面、不用為每個方向各寫一份。
 
 ---
 
@@ -794,7 +794,7 @@ cross 軸（例如 `Column` 的水平方向）給的是「有上限的鬆約束�
 | 文字/圖示沒有辦法置中在按鈕正中間 | `Container` 沒有給 `alignment`，`Padding` 只是位移不是置中；補上 `alignment: Alignment.center` |
 | 文字/圖示大小原本寫死像素值，想讓它們跟著按鈕尺寸變化，但手動傳參數的做法會讓內容渲染函式的簽名綁死呼叫端算出的尺寸，維護成本高 | 改用 `FittedBox` 自己讀取被分配到的空間、自己決定縮放比例，內容渲染函式不需要知道外部尺寸，函式簽名不用改 |
 | `FittedBox` 一開始用 `BoxFit.scaleDown`，在大螢幕/平板上文字圖示無法跟著按鈕一起放大 | 改用 `BoxFit.contain`，雙向縮放 |
-| `CSSManager` 常數命名從 `buttonWidthPercent`/`buttonHeightPercent` 改成 `widthPercent`/`lengthPercent`，橫式版面裡兩者意義互換、容易誤讀 | 最終改名為 `shortSidePercent`/`longSidePercent`，並理解到這兩個常數描述的其實是「排列數量」，是方向無關的不變量 |
+| `PanelPageCss` 常數命名從 `buttonWidthPercent`/`buttonHeightPercent` 改成 `widthPercent`/`lengthPercent`，橫式版面裡兩者意義互換、容易誤讀 | 最終改名為 `shortSidePercent`/`longSidePercent`，並理解到這兩個常數描述的其實是「排列數量」，是方向無關的不變量 |
 | 曾經想寫 `axisPercentFor(int count)` 這種通用函式取代兩個具名常數 | 評估後決定維持兩個具名常數即可，函式移除 |
 | AppBar 原本沿用 Phase 6 的固定標題列，經過多輪討論調整 | 直式保留但拿掉標題與底色（`toolbarHeight: 48`、`backgroundColor: transparent`、`elevation: 0`），橫式整個移除（`appBar: null`）；音效開關按鈕的放置位置一併決議，已同步更新到 `設計主軸.md` |
 | 樓層按鈕 `onTap` 跟 `goUpFloor`/`goDownFloor` 內部設定 `elevator.direction` 的方式做了小幅重構 | 跟本 Phase 主題無關，是討論過程中「順手修正的 bug」，已確認行為一致、沒有副作用 |
@@ -803,14 +803,14 @@ cross 軸（例如 `Column` 的水平方向）給的是「有上限的鬆約束�
 
 ## 四、目前涵蓋範圍與尚未處理的部分
 
-**已涵蓋**：直式／橫式各自完整的版面結構（`LayoutBuilder` + 雙軸 `min()` 計算出的真正正方形按鈕）；開關門按鈕在橫式獨立於樓層按鈕區塊之外；`AppBar` 依方向的不同呈現方式（直式透明無標題、橫式整個移除）；音效開關的放置位置決策；樓層按鈕文字、開關門圖示、方向箭頭、樓層顯示大數字，全部透過 `FittedBox` + `BoxFit.contain` 做到跟著容器尺寸等比例縮放；`Container` 內容置中；`CSSManager` 常數與輔助函式的命名與介面整理。
+**已涵蓋**：直式／橫式各自完整的版面結構（`LayoutBuilder` + 雙軸 `min()` 計算出的真正正方形按鈕）；開關門按鈕在橫式獨立於樓層按鈕區塊之外；`AppBar` 依方向的不同呈現方式（直式透明無標題、橫式整個移除）；音效開關的放置位置決策；樓層按鈕文字、開關門圖示、方向箭頭、樓層顯示大數字，全部透過 `FittedBox` + `BoxFit.contain` 做到跟著容器尺寸等比例縮放；`Container` 內容置中；`PanelPageCss` 常數與輔助函式的命名與介面整理。
 
 **尚未處理，明確留到之後**：
 
 - 橫式音效開關的實際按鈕（圖示、點擊行為、跟音效邏輯串接），以及最終要用「疊加式（`Stack`+`Positioned`）」還是「保留式（額外切一塊空間）」放置 → **Phase 11（音效與語音素材整合）**
 - `doorStatus` 視覺呈現，含開門中/關門中的動畫過渡 → **Phase 8（動畫效果）**
 - 固定的 `padding: 10` 沒有跟著 `btnSize` 一起縮放，小螢幕上內容相對被吃掉的比例會比大螢幕高一些；已實際測試並確認可以接受，暫不調整
-- `CSSManager` 常數旁的註解仍寫著「按鈕的寬邊/長邊」，跟新語意（排列數量）不完全一致，屬於小地方，未強制修正
+- `PanelPageCss` 常數旁的註解仍寫著「按鈕的寬邊/長邊」，跟新語意（排列數量）不完全一致，屬於小地方，未強制修正
 - 開關門按鈕「手指移出範圍應該取消按壓效果」的精確處理（延續 Phase 6 的決定，維持「待確認、有需要再處理」的狀態）
 - 元件化與檔案拆分 → Phase 9
 - 套件引用 → Phase 10
