@@ -156,13 +156,13 @@ class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProvi
 
 BoxShadow _getBoxShadow(bool isPressed) {
   return isPressed ? const BoxShadow(
-                        color: Color(0xFF665D52),
+                        color: LayoutCss.neutral7,
                         offset: Offset(0,1),
                         blurRadius: 1
                       )
                     : 
                       const BoxShadow(
-                        color: Color(0xFF665D52),
+                        color: LayoutCss.neutral7,
                         offset: Offset(0,5),
                         blurRadius: 3
                       );
