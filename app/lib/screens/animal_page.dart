@@ -481,7 +481,7 @@ List<Animal> getInitAnimals() {
     const Animal(
       headShotImg: 'assets/images/animal_page/dog_headshot.png', 
       correctAnimate: 'assets/videos/dog_correct.mp4', 
-      errAnimate: 'assets/videos/dog_correct.mp4'
+      errAnimate: 'assets/videos/dog_error.mp4'
     ),
     // const Animal(headShotImg: 'assets/images/animal_page/cat_headshot.png', correctAnimate: 'assets/videos/dinosaur_correct.mp4', errAnimate: 'assets/videos/dinosaur_correct.mp4'),
     const Animal(
