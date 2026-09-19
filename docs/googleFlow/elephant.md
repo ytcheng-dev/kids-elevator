@@ -46,18 +46,18 @@
 
 [00:04–00:07] 困惑張望＋台詞（全景，鏡頭延續上段位置）
 
-中文：鏡頭維持在上一段結尾的位置，完全固定不動。全景，@elephant 走出電梯後在原地停下腳步，緩緩地左右張望四周，耳朵慢慢垂下，長鼻子輕輕左右晃動，露出困惑的神情。@elephant says: "好像不是這裡，再試一次吧"，語氣溫和帶著疑惑，聲音清亮自然，語速平穩不急促，沒有難過或沮喪的情緒。
+中文：鏡頭維持在上一段結尾的位置，完全固定不動。全景，@elephant 持續在原地站定不動，頭部緩緩地更加低垂，視線低垂望向地面，安靜地維持這個若有所思的姿態片刻，流露出淡淡的失落與一點點不好意思的神情。@elephant says: "不是這裡，再試一次吧"，語氣帶著明顯的失落與一點點不好意思，聲音依然溫和清亮，語速比平常稍慢，透露出小小的沮喪感，但不到哭泣或激動的程度。
 
-英文：Camera holds at the position reached at the end of the previous segment, completely static. Full shot, @elephant stops in place after exiting the elevator, slowly looking around from side to side, ears gradually drooping down, trunk swaying gently side to side, a puzzled expression on its face. @elephant says: "好像不是這裡，再試一次吧", voice gentle and curious, warm and clear, natural steady pace, without sadness or distress.
+英文：Camera holds at the position reached at the end of the previous segment, completely static. Full shot, @elephant remains standing still in place, its head slowly lowering further, gaze cast down toward the ground, quietly holding this thoughtful posture for a moment, conveying a gentle sense of disappointment and shyness. @elephant says: "不是這裡，再試一次吧", voice carrying noticeable dejection and a touch of shyness, still warm and clear but slightly slower than usual, conveying a small touch of sadness, without crying or distress.
 
 [00:07–00:10] 轉身走回電梯＋電梯門關上（全景，鏡頭不跟拍）
 
-中文：全景，場景延續前面段落。@elephant 困惑張望後轉身，以四肢從容的步伐朝電梯方向走回去，耳朵隨著步伐微微晃動，跨過門檻、走回電梯內，電梯門緩緩地在牠身後闔上。鏡頭完全固定不動、不跟隨大象移動，讓牠自然地走回畫面中央的電梯，電梯門完全闔上、保持在畫面正中央。
+中文：全景，場景延續前面段落。@elephant 困惑張望後轉身，以四肢緩慢的步伐朝電梯方向走回去，耳朵隨著步伐微微晃動；牠先完全走入電梯車廂內、雙腳都跨過門檻並站定後，電梯門才開始緩緩闔上。鏡頭完全固定不動、不跟隨 @elephant 移動，讓牠自然地走回畫面中央的電梯，直到電梯門完全闔上、保持在畫面正中央。
 
-英文：Full shot, same scene as previous segments. After looking around in confusion, @elephant turns and walks back toward the elevator on all four legs at an unhurried pace, ears swaying gently with each step, crossing back over the threshold into the elevator; the doors slowly close behind it. Camera remains completely static and does not follow the elephant, simply watching it return to the elevator at the center of frame, doors fully closed and centered in the background.
+英文：Full shot, same scene as previous segments. After looking around in confusion, @elephant turns and walks back toward the elevator on all four legs at a slow, unhurried pace, ears swaying gently with each step. Only after it has fully stepped inside the elevator car, crossing the threshold completely and coming to a stop, does the elevator door begin to slowly close behind it. Camera remains completely static and does not follow @elephant, simply watching it return to the elevator at the center of frame, until the doors are fully closed and centered in the background.
 
 [全域收尾]
 
-中文：整體風格：柔和的兒童玩偶 3D 渲染風格，圓潤造型，暖色調柔光，繪本插畫質感，明亮活力，適合幼兒觀看。@elephant 全程以四足行走的自然動物姿態呈現。場景設計（電梯門、牆面、走廊）全程與 @elevator 保持一致。背景音樂：明亮但稍微柔和、帶點好奇探索感的兒童風格配樂（木琴/烏克麗麗音色），避免過於歡快熱鬧的節奏，也不要顯得低落，長度對齊影片總長，自然收尾，不重複播放、不突兀中斷。畫面中不要出現：文字字幕、浮水印、Logo、與參考圖不一致的牆面風格。
+中文：整體風格：柔和的兒童玩偶 3D 渲染風格，圓潤造型，暖色調柔光，繪本插畫質感，明亮活力，適合幼兒觀看。@elephant 全程以四足行走的自然動物姿態呈現。場景設計（電梯門、牆面、走廊）全程與 @elevator 保持一致。背景音樂：電梯門打開瞬間仍保持明亮，但 @elephant 一走出電梯、開始張望起就逐漸轉為稍慢、帶點溫柔淡淡失落感的旋律（木琴/烏克麗麗音色），不要陰暗或緊張，長度對齊影片總長，自然收尾，不重複播放、不突兀中斷。畫面中不要出現：文字字幕、浮水印、Logo、與參考圖不一致的牆面風格。
 
-英文：Overall style: soft 3D toy-render aesthetic, rounded plush-toy shapes, warm soft lighting, storybook illustration quality, bright and energetic, suitable for young children. @elephant moves naturally on all four legs throughout. Scene design (doors, walls, hallway) stays consistent with @elevator throughout. Background music: bright but slightly softer children's tune with a curious, exploratory feel (xylophone/ukulele), avoiding an overly upbeat celebratory rhythm while not sounding downcast either, length aligned to video duration, resolving naturally, no looping or abrupt cutoff. Exclude: on-screen text, subtitles, watermark, logo overlay, inconsistent wall style.
+英文：Overall style: soft 3D toy-render aesthetic, rounded plush-toy shapes, warm soft lighting, storybook illustration quality, bright and energetic, suitable for young children. @elephant moves naturally on all four legs throughout. Scene design (doors, walls, hallway) stays consistent with @elevator throughout. Background music: bright at the moment the doors open, but beginning to shift toward a slightly slower melody with a gentle touch of wistfulness (xylophone/ukulele) once @elephant steps out and starts looking around, never dark or tense, length aligned to video duration, resolving naturally, no looping or abrupt cutoff. Exclude: on-screen text, subtitles, watermark, logo overlay, inconsistent wall style.
