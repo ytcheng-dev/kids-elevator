@@ -172,6 +172,7 @@ class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProvi
       width: btnWidth,
       height: btnHeight,
       child: FloorTile(
+        key: ValueKey('floorTile${floorButton.title}'),
         floorButton: floorButton,
         onTap: () {
           requestSfxPlayer();

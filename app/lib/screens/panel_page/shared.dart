@@ -14,6 +14,7 @@ Widget _getFloorTile(_PanelPageState state, int btnKey, double btnWidth, double 
       width: btnWidth,
       height: btnHeight,
       child: FloorTile(
+          key: ValueKey('floorTile${floorButton.title}'),
           floorButton: floorButton,
           onTap: () {
             state.floorTileOnTap(floorButton, btnKey);

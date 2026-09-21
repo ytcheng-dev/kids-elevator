@@ -32,7 +32,7 @@ class TimerManager {
             Timer(const Duration(seconds: TimerManager.longPressOpenTime), cb);
         break;
       case TimerType.doSwitch:
-        _pendingTimer = Timer(const Duration(milliseconds: switchTime), cb);
+        _pendingTimer = Timer(const Duration(milliseconds: TimerManager.switchTime), cb);
         break;
     }
   }
