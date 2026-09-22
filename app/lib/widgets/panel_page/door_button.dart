@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/enums.dart';
 import '../../models/panel_buttons.dart';
 
 import '../../styles/layout_css.dart';
@@ -34,6 +35,8 @@ class _DoorButtonState extends State<DoorButton> {
 
   @override
   Widget build(BuildContext context) {
+    final IconData iconCode = widget.actionButton.btnType == ActionType.open ? Icons.unfold_more_outlined : Icons.unfold_less_outlined;
+
     return Listener(
         onPointerDown: (event) {
           setState(() {
@@ -77,7 +80,7 @@ class _DoorButtonState extends State<DoorButton> {
                   quarterTurns: 1,
                   child: FittedBox(
                       fit: BoxFit.contain,
-                      child: Icon(widget.actionButton.iconCode,
+                      child: Icon(iconCode,
                           size: 60,
                           color: _isPressed
                               ? highlightColor

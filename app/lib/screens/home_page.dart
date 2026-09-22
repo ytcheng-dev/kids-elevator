@@ -82,6 +82,7 @@ class HomePage extends ConsumerWidget {
               Expanded(
                 flex: 2,
                 child: Row(
+                  key: const ValueKey('volumeRow'),
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _getVolumeButton(ref, VolumeType.sfx),
@@ -184,6 +185,7 @@ Widget _getMenuButton(MenuButtonTarget menuBtnTarget, BuildContext context) {
 
 Widget _getVolumeButton(WidgetRef ref, VolumeType vType) {
   return VolumeButton(
+      key: vType == VolumeType.sfx ? const ValueKey('volumeSFX') : const ValueKey('volumeVoice'),
       isAllow: vType == VolumeType.sfx
           ? ref.watch(volumeProvider).isAllowSfx
           : ref.watch(volumeProvider).isAllowVoice,

@@ -51,12 +51,10 @@ class _PanelPageState extends ConsumerState<PanelPage>
     ActionType.open: ActionButton(
         btnType: ActionType.open,
         title: '開門',
-        iconCode: Icons.unfold_more_outlined,
         audioFile: 'sounds/panel/open_door.mp3'),
     ActionType.close: ActionButton(
         btnType: ActionType.close,
         title: '關門',
-        iconCode: Icons.unfold_less_outlined,
         audioFile: 'sounds/panel/close_door.mp3')
   };
 

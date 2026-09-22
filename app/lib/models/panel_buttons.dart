@@ -18,11 +18,9 @@ class ActionButton {
   ActionButton(
       {required this.title,
       required this.btnType,
-      required this.iconCode,
       required this.audioFile});
 
   final String title;
   final String audioFile;
-  final IconData iconCode;
   final ActionType btnType;
 }
