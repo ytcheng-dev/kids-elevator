@@ -112,7 +112,7 @@ void testOnLongPressStart() {
     testWidgets('quick tap', (WidgetTester tester) async {
       bool checkLongPressStart = false;
 
-      await _pumpDoorButton(tester, ActionType.open, onLongPressEnd: () {
+      await _pumpDoorButton(tester, ActionType.open, onLongPressStart: () {
         checkLongPressStart = true;
       });
 
