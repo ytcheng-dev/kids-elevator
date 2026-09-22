@@ -21,7 +21,7 @@ class QuestionButton extends StatefulWidget{
 class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProviderStateMixin{
   _QuestionButtonState();
 
-  bool isPressed = false;
+  bool _isPressed = false;
 
   late final AnimationController _quesAnimateController;
 
@@ -72,17 +72,17 @@ class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProvi
       onTap: widget.onTap,
       onTapDown: (tapDownDetails) {
         setState(() {
-          isPressed = true;
+          _isPressed = true;
         });
       },
       onTapUp: (tapUpDetails) {
         setState(() {
-          isPressed = false;
+          _isPressed = false;
         });
       },
       onTapCancel: () {
         setState(() {
-          isPressed = false;
+          _isPressed = false;
         });
       },
       child: Stack(
@@ -91,6 +91,7 @@ class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProvi
               animation: _quesAnimateController,
               builder: (context, child) {
                 return Container(
+                  key: const ValueKey('border-container'),
                   padding: LayoutCss.m1,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -99,7 +100,7 @@ class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProvi
                       color: _quesAnimateBorder.value!,
                       width: 3
                     ),
-                    boxShadow: [_getBoxShadow(isPressed)]
+                    boxShadow: [_getBoxShadow(_isPressed)]
                   ),
                   child: child
                 );
@@ -125,6 +126,7 @@ class _QuestionButtonState extends State<QuestionButton>  with SingleTickerProvi
                     animation: _quesAnimateController,
                     builder: (context, child) {
                       return Container(
+                                key: const ValueKey('icon-container'),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
