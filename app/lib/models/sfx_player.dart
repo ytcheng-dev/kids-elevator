@@ -1,6 +1,8 @@
+import '../interfaces/audio_player_base.dart';
+
 import 'package:audioplayers/audioplayers.dart';
 
-class SfxPlayer {
+class SfxPlayer implements SfxPlayerBase {
   // sound effect player
   SfxPlayer() {
     // 要求與其他音效混音，不要搶占焦點
@@ -9,27 +11,29 @@ class SfxPlayer {
             .build());
 
     _audioPlayer.onPlayerComplete.listen((event) {
-      isPlaying = false;
+      _isPlaying = false;
     });
   }
 
   final AudioPlayer _audioPlayer = AudioPlayer();
-  final String audioFile = 'sounds/panel/button.mp3';
+  final String _audioFile = 'sounds/panel/button.mp3';
 
-  bool isPlaying = false; // 是否正在播放
+  bool _isPlaying = false; // 是否正在播放
 
+  @override
   void request({required bool isAllow}) {
-    if (!isPlaying && isAllow) {
+    if (!_isPlaying && isAllow) {
       _play();
     }
   }
 
   void _play() {
-    isPlaying = true;
+    _isPlaying = true;
 
-    _audioPlayer.play(AssetSource(audioFile));
+    _audioPlayer.play(AssetSource(_audioFile));
   }
 
+  @override
   void dispose() {
     _audioPlayer.dispose();
   }

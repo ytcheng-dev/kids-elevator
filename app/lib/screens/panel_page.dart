@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../interfaces/audio_player_base.dart';
+
 import '../models/panel_buttons.dart';
 import '../models/elevator.dart';
 import '../models/enums.dart';
@@ -26,7 +28,10 @@ part 'panel_page/portrait.dart'; // 直式排版
 part 'panel_page/shared.dart'; // 共用排版函式
 
 class PanelPage extends ConsumerStatefulWidget {
-  const PanelPage({super.key});
+  const PanelPage({super.key, this.sfxPlayer, this.voicePlayer});
+
+  final SfxPlayerBase? sfxPlayer;
+  final VoicePlayerBase? voicePlayer;
 
   @override
   ConsumerState<PanelPage> createState() => _PanelPageState();
@@ -65,8 +70,8 @@ class _PanelPageState extends ConsumerState<PanelPage>
   late final AnimationController _animateController;
   late final AnimateOffset _animateOffset;
 
-  late final VoicePlayer _voicePlayer;
-  late final SfxPlayer _sfxPlayer;
+  late final VoicePlayerBase _voicePlayer;
+  late final SfxPlayerBase _sfxPlayer;
 
   @override
   void initState() {
@@ -77,9 +82,9 @@ class _PanelPageState extends ConsumerState<PanelPage>
 
     _animateOffset = AnimateOffset(animateController: _animateController);
 
-    _voicePlayer = VoicePlayer();
+    _voicePlayer = widget.voicePlayer ?? VoicePlayer();
 
-    _sfxPlayer = SfxPlayer();
+    _sfxPlayer = widget.sfxPlayer ?? SfxPlayer();
   }
 
   @override

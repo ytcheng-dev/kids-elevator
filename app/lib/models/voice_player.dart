@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 
-class VoicePlayer {
+import '../interfaces/audio_player_base.dart';
+
+class VoicePlayer implements VoicePlayerBase {
   VoicePlayer() {
     _audioPlayer.onPlayerComplete.listen((event) {
       // 先執行任務, 然後才能播放下一條
       _targetTask?.call();
       _targetTask = null;
 
-      isPlaying = false;
+      _isPlaying = false;
 
       _play();
     });
   }
 
   final AudioPlayer _audioPlayer = AudioPlayer();
-  bool isPlaying = false;
+  bool _isPlaying = false;
 
   String? _nextFile;
   VoidCallback? _nextTask, _targetTask;
 
+  @override
   void request({required bool isAllow, required String fileName, void Function()? cb}) {
     if (!isAllow) {
       cb?.call();
@@ -30,7 +33,7 @@ class VoicePlayer {
     _nextFile = fileName;
     _nextTask = cb;
 
-    if (!isPlaying) {
+    if (!_isPlaying) {
       _play();
     }
   }
@@ -45,16 +48,13 @@ class VoicePlayer {
       _targetTask = _nextTask;
       _nextTask = null;
 
-      isPlaying = true;
+      _isPlaying = true;
 
       _audioPlayer.play(AssetSource(targetFile!));
     }
   }
 
-  void clear() {
-    _nextFile = null;
-  }
-
+  @override
   void dispose() {
     _audioPlayer.dispose();
   }
