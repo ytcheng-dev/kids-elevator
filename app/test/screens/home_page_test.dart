@@ -8,10 +8,7 @@ import 'package:elevator/widgets/volume_button.dart';
 
 import 'package:elevator/providers/volume.dart';
 
-class FakeVolumeNotifier extends VolumeNotifier {
-  @override
-  VolumeState build() => const VolumeState(isAllowSfx: false, isAllowVoice: false);
-}
+import '../fakes/fake_volume_notifier.dart';
 
 void main() {
   group('home page', () {

@@ -11,6 +11,7 @@ class FakeVoicePlayer implements VoicePlayerBase {
   bool isDispose = false;
   int waitForPlay = 0;
   void Function()? _nextTask, _targetTask;
+  Timer? _pendingTimer;
 
   @override
   void request({required bool isAllow, required String fileName, void Function()? cb}) {
@@ -36,7 +37,7 @@ class FakeVoicePlayer implements VoicePlayerBase {
 
       isPlaying = true;
 
-      Timer(Duration(seconds: delaySeconds), () {
+      _pendingTimer = Timer(Duration(seconds: delaySeconds), () {
         _targetTask?.call();
         _targetTask = null;
 
@@ -50,5 +51,7 @@ class FakeVoicePlayer implements VoicePlayerBase {
   @override
   void dispose() {
     isDispose = true;
+
+    _pendingTimer?.cancel();
   }
 }
