@@ -90,17 +90,13 @@ void testFloorTileOnTap() {
       _setPortraitScreen(tester);
       await _pumpPanelPage(tester, sfxPlayer: FakeSfxPlayer());
 
-      final containerFider = find.descendant(of: find.byKey(floorTileB1), matching: find.byType(Container));
-
       // confirm init
-      final initContainer = tester.widget<Container>(containerFider);
-      _checkDecoration(initContainer, false, reason: '$reason: init');
+      _checkFloorTileDecoration(tester, floorTileB1, false, reason: '$reason: init');
 
       await tester.tap(find.byKey(floorTileB1));
       await tester.pump();
 
-      final tapContainer = tester.widget<Container>(containerFider);
-      _checkDecoration(tapContainer, true, reason: '$reason: tap');
+      _checkFloorTileDecoration(tester, floorTileB1, true, reason: '$reason: tap');
     });
   });
 }
@@ -221,6 +217,169 @@ void testMoveFarFloor() {
   });
 }
 
+void testTapWhenMoving() {
+  group('tap floor during moving', () {
+    testWidgets('same direction', (WidgetTester tester) async {
+      _setPortraitScreen(tester);
+      final voicePlayer = FakeVoicePlayer(delaySeconds: 1);
+
+      final floor2Key = ValueKey('floorTile${Floor.f2.title}'),
+            floor3Key = ValueKey('floorTile${Floor.f3.title}');
+
+      await _pumpPanelPage(tester, voicePlayer: voicePlayer, isAllowVoice: true);
+
+      // 點 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration);   
+      // 驗證 2 樓是目標
+      _checkFloorTileDecoration(tester, floor2Key, true);
+      // 驗證 3 樓不是目標
+      _checkFloorTileDecoration(tester, floor3Key, false);
+      // 點 3 樓
+      await tester.tap(find.byKey(floor3Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration); 
+      // 驗證 3 樓是目標
+      _checkFloorTileDecoration(tester, floor3Key, true);
+      // 驗證行徑方向: 2 樓
+      await _checkMoveSingle(tester, voicePlayer, floor2Key, elapsedDuration: _diffDuration * 2);
+      // 驗證行徑方向: 3 樓
+      await _checkMoveSingle(tester, voicePlayer, floor3Key);
+
+    });
+
+    testWidgets('same direction but in front of target', (WidgetTester tester) async {
+      _setPortraitScreen(tester);
+      final voicePlayer = FakeVoicePlayer(delaySeconds: 1);
+
+      final floor2Key = ValueKey('floorTile${Floor.f2.title}'),
+            floor3Key = ValueKey('floorTile${Floor.f3.title}');
+
+      await _pumpPanelPage(tester, voicePlayer: voicePlayer, isAllowVoice: true);
+
+      // 點 3 樓
+      await tester.tap(find.byKey(floor3Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration);   
+      // 驗證 3 樓是目標
+      _checkFloorTileDecoration(tester, floor3Key, true);
+      // 驗證 2 樓不是目標
+      _checkFloorTileDecoration(tester, floor2Key, false);
+      // 點 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration); 
+      // 驗證 2 樓是目標
+      _checkFloorTileDecoration(tester, floor2Key, true);
+      // 驗證行徑方向: 2 樓
+      await _checkMoveSingle(tester, voicePlayer, floor2Key, elapsedDuration: _diffDuration * 2);
+      // 驗證行徑方向: 3 樓
+      await _checkMoveSingle(tester, voicePlayer, floor3Key);
+
+    });
+
+    testWidgets('different direction', (WidgetTester tester) async {
+      _setPortraitScreen(tester);
+      final voicePlayer = FakeVoicePlayer(delaySeconds: 1);
+
+      final floor2Key = ValueKey('floorTile${Floor.f2.title}'),
+            floor1Key = ValueKey('floorTile${Floor.f1.title}');
+
+      await _pumpPanelPage(tester, voicePlayer: voicePlayer, isAllowVoice: true);
+
+      // 點 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration);   
+      // 驗證 2 樓是目標
+      _checkFloorTileDecoration(tester, floor2Key, true);
+      // 驗證 1 樓不是目標
+      _checkFloorTileDecoration(tester, floor1Key, false);
+      // 點 1 樓
+      await tester.tap(find.byKey(floor1Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration); 
+      // 驗證 1 樓是目標
+      _checkFloorTileDecoration(tester, floor1Key, true);
+      // 驗證行徑方向: 2 樓
+      await _checkMoveSingle(tester, voicePlayer, floor2Key, elapsedDuration: _diffDuration * 2);
+      // 驗證行徑方向: 1 樓
+      await _checkMoveSingle(tester, voicePlayer, floor1Key);
+      // 電梯停止
+      expect(tester.hasRunningAnimations, isFalse);
+    });
+
+    testWidgets('different direction to far away', (WidgetTester tester) async {
+      _setPortraitScreen(tester);
+      final voicePlayer = FakeVoicePlayer(delaySeconds: 1);
+
+      final floor2Key = ValueKey('floorTile${Floor.f2.title}'),
+            floorB2Key = ValueKey('floorTile${Floor.b2.title}'),
+            throughFloors = Floor.values.sublist(Floor.b1.index, Floor.f2.index+1).reversed.toList();
+
+      await _pumpPanelPage(tester, voicePlayer: voicePlayer, isAllowVoice: true);
+
+      // 點 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration);   
+      // 驗證 2 樓是目標
+      _checkFloorTileDecoration(tester, floor2Key, true);
+      // 驗證 B2 樓不是目標
+      _checkFloorTileDecoration(tester, floorB2Key, false);
+      // 點 B2 樓
+      await tester.tap(find.byKey(floorB2Key));
+      // 畫面動一下
+      await tester.pump(_diffDuration); 
+      // 驗證 B2 樓是目標
+      _checkFloorTileDecoration(tester, floorB2Key, true);
+      // 驗證行徑方向: 2 樓
+      await _checkMoveSingle(tester, voicePlayer, floor2Key, elapsedDuration: _diffDuration * 2);
+      // 從 2 樓路過 1, B1
+      await _checkGoThroughFloor(tester, throughFloors);
+      // 驗證行徑方向: B2 樓
+      await _checkMoveSingle(tester, voicePlayer, floorB2Key);
+      // 電梯停止
+      expect(tester.hasRunningAnimations, isFalse);
+    });
+
+    testWidgets('tap for cancel', (WidgetTester tester) async {
+      _setPortraitScreen(tester);
+      final voicePlayer = FakeVoicePlayer(delaySeconds: 1);
+      const floor = Floor.f2,
+            frontFloor = Floor.f1;
+      final floor2Key = ValueKey('floorTile${floor.title}');
+
+      await _pumpPanelPage(tester, voicePlayer: voicePlayer, isAllowVoice: true);
+      // 點 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 推進時間
+      await tester.pump(_diffDuration);
+      // 驗證 2 樓是目標
+      _checkFloorTileDecoration(tester, floor2Key, true);
+      // 確認電梯已出發
+      expect(tester.hasRunningAnimations, isTrue);
+      // 取消 2 樓
+      await tester.tap(find.byKey(floor2Key));
+      // 推進時間
+      await tester.pump(_diffDuration);
+      // 驗證 2 樓不是目標
+      _checkFloorTileDecoration(tester, floor2Key, false);
+      // 到達前，有動畫，顯示 1 樓
+      await tester.pump(const Duration(seconds: TimerManager.floorTime) - (_diffDuration * 2) - _diffDuration);
+      expect(tester.hasRunningAnimations, isTrue);
+      _checkFloorDisplayShow(frontFloor);
+      // 到達後不開門, 無音效
+      await tester.pump(_diffDuration);
+      expect(voicePlayer.isPlaying, isFalse);
+      expect(tester.hasRunningAnimations, isFalse);
+      // 確認是 2 樓
+      _checkFloorDisplayShow(floor);
+    });
+  });
+}
+
 void _setPortraitScreen(WidgetTester tester) {
   tester.view.devicePixelRatio = 1.0;
   tester.view.physicalSize = const Size(400, 800);
@@ -241,7 +400,9 @@ Future<void> _pumpPanelPage(WidgetTester tester, {bool isAllowSfx = false, bool 
   ));
 }
 
-void _checkDecoration(Container container, bool isHighlight, {String? reason}) {
+void _checkFloorTileDecoration(WidgetTester tester, ValueKey targetFloorKey, bool isHighlight, {String? reason}) {
+  final containerFinder = find.descendant(of: find.byKey(targetFloorKey), matching: find.byType(Container));
+  final container = tester.widget<Container>(containerFinder);
   final decoration = container.decoration as BoxDecoration;
 
   if (isHighlight) {
@@ -256,8 +417,13 @@ void _checkDecoration(Container container, bool isHighlight, {String? reason}) {
   }
 }
 
-Future<void> _checkMoveSingle(WidgetTester tester, FakeVoicePlayer voicePlayer, ValueKey targetFloorKey, {String? reason}) async {
-  await tester.pump(const Duration(seconds: TimerManager.floorTime) - _diffDuration); // 移動 1 個樓層
+Future<void> _checkMoveSingle(WidgetTester tester, FakeVoicePlayer voicePlayer, ValueKey targetFloorKey, {String? reason, Duration? elapsedDuration}) async {
+  Duration firstDuration = const Duration(seconds: TimerManager.floorTime) - _diffDuration;
+  if (elapsedDuration != null) {
+    firstDuration = firstDuration - elapsedDuration;
+  }
+    
+  await tester.pump(firstDuration); // 移動 1 個樓層
   // 樓層還沒移動完 -> 還不能播語音
   expect(voicePlayer.isPlaying, isFalse, reason: reason);
   expect(tester.hasRunningAnimations, isTrue, reason: reason); 
@@ -284,11 +450,8 @@ Future<void> _checkMoveSingle(WidgetTester tester, FakeVoicePlayer voicePlayer, 
   // 推進時間 -> 樓層語音結束 -> 開門動畫開始, isTarget = false(畫面重繪)
   await tester.pump(_diffDuration);
   expect(tester.hasRunningAnimations, isTrue, reason: reason);
-
-  final containerFider = find.descendant(of: find.byKey(targetFloorKey), matching: find.byType(Container));
-  final container = tester.widget<Container>(containerFider);
-
-  _checkDecoration(container, false, reason: '${reason == null ? '' : '$reason: '}isTarget = false');
+  // 驗證目標熄燈
+  _checkFloorTileDecoration(tester, targetFloorKey, false, reason: '${reason == null ? '' : '$reason: '}isTarget = false');
 
   // 開門動畫結束前
   await tester.pump(const Duration(seconds: TimerManager.doorProcTime) - _diffDuration);
@@ -323,13 +486,16 @@ Future<void> _checkGoThroughFloor(WidgetTester tester, List<Floor> throughFloors
     // 到達前
     await tester.pump(const Duration(seconds: TimerManager.floorTime) - _diffDuration);
     // 樓層不變
-    final textFinder = find.descendant(of: find.byType(FloorDisplay), matching: find.text(throughFloors[i-1].title));
-    expect(textFinder, findsOneWidget);
+    _checkFloorDisplayShow(throughFloors[i-1]);
 
     // 到達
     await tester.pump(_diffDuration);
     // 樓層改變
-    final arrTextFinder = find.descendant(of: find.byType(FloorDisplay), matching: find.text(throughFloors[i].title));
-    expect(arrTextFinder, findsOneWidget);
+    _checkFloorDisplayShow(throughFloors[i]);
   }
+}
+
+void _checkFloorDisplayShow(Floor floor) {
+  final arrTextFinder = find.descendant(of: find.byType(FloorDisplay), matching: find.text(floor.title));
+  expect(arrTextFinder, findsOneWidget);
 }
