@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
+import '../constants/floor.dart';
+
 import '../models/animal.dart';
 import '../models/panel_buttons.dart';
 import '../models/enums.dart';
@@ -30,19 +32,19 @@ class AnimalPage extends ConsumerStatefulWidget {
 }
 
 class _AnimalPageState extends ConsumerState<AnimalPage>  with SingleTickerProviderStateMixin {
-  final int maxFloor = 4;
-  final int minFloor = -2;
+  final int maxFloor = Floor.f5.levelKey;
+  final int minFloor = Floor.b2.levelKey;
   
   final List<Animal> animalList = getInitAnimals();
 
   final Map<int, FloorButton> floorMap = {
-    -2: FloorButton(title: 'B2', audioFile: 'sounds/panel/floor_B2.mp3'),
-    -1: FloorButton(title: 'B1', audioFile: 'sounds/panel/floor_B1.mp3'),
-    0: FloorButton(title: '1', audioFile: 'sounds/panel/floor_1.mp3'),
-    1: FloorButton(title: '2', audioFile: 'sounds/panel/floor_2.mp3'),
-    2: FloorButton(title: '3', audioFile: 'sounds/panel/floor_3.mp3'),
-    3: FloorButton(title: '4', audioFile: 'sounds/panel/floor_4.mp3'),
-    4: FloorButton(title: '5', audioFile: 'sounds/panel/floor_5.mp3')
+    Floor.b2.levelKey: FloorButton(title: Floor.b2.title, audioFile: 'sounds/panel/floor_B2.mp3'),
+    Floor.b1.levelKey: FloorButton(title: Floor.b1.title, audioFile: 'sounds/panel/floor_B1.mp3'),
+    Floor.f1.levelKey: FloorButton(title: Floor.f1.title, audioFile: 'sounds/panel/floor_1.mp3'),
+    Floor.f2.levelKey: FloorButton(title: Floor.f2.title, audioFile: 'sounds/panel/floor_2.mp3'),
+    Floor.f3.levelKey: FloorButton(title: Floor.f3.title, audioFile: 'sounds/panel/floor_3.mp3'),
+    Floor.f4.levelKey: FloorButton(title: Floor.f4.title, audioFile: 'sounds/panel/floor_4.mp3'),
+    Floor.f5.levelKey: FloorButton(title: Floor.f5.title, audioFile: 'sounds/panel/floor_5.mp3')
   };
 
   final List<String> quesAudios = [
