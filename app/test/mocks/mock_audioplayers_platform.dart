@@ -77,6 +77,8 @@ class MockAudioPlayersPlatform {
       if (call.method == 'getTemporaryDirectory') {
         return tempDir.path;
       }
+
+      return null;
     });
   }
 
