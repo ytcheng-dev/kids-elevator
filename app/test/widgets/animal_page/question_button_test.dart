@@ -5,11 +5,9 @@ import 'package:elevator/widgets/animal_page/question_button.dart';
 
 import 'package:elevator/styles/layout_css.dart';
 
-const Color _defaultColor = LayoutCss.secondary,
-            _animateEndColor = LayoutCss.secondary1;
+const Color _defaultColor = LayoutCss.secondary;
 
-final BoxBorder _defaultBorder = Border.all(color: _defaultColor, width: 3),
-                _animateEndBorder = Border.all(color: _animateEndColor, width: 3);
+final BoxBorder _defaultBorder = Border.all(color: _defaultColor, width: 3);
 
 const BoxShadow _onPressShadow = BoxShadow(
                                     color: LayoutCss.neutral7,

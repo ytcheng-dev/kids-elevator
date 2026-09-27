@@ -268,7 +268,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
       // 只有 idle 的時候可以開門
       if (elevator.doorStatus != DoorStatus.opening &&
           elevator.doorStatus != DoorStatus.open) {
-        // 關門 or 關門中 => 觸發開始開門
+        // 關門 => 觸發開始開門
         setState(() {
           elevator.doorStatus = DoorStatus.opening;
           _animateController.repeat();
@@ -296,7 +296,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
         });
       }
       // 開門中 => 理論上後續會自行完成開門流程
-      // 開門 => 不需要處理
+      // 開門, 關門中 => 不需要處理
     }
   }
 
@@ -343,7 +343,7 @@ class _PanelPageState extends ConsumerState<PanelPage>
       // 電梯沒有行進才能執行
       if (elevator.doorStatus != DoorStatus.opening &&
           elevator.doorStatus != DoorStatus.open) {
-        // 關門中 or 關門 => 需要先執行開門
+        // 需要先執行開門
         openDoor();
       } else if (elevator.doorStatus == DoorStatus.opening) {
         // 把原本的事情執行完 => 不用處理

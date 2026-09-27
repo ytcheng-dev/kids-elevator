@@ -38,10 +38,8 @@ void testInit(MockAudioPlayersPlatform Function() getPlatform) {
     SfxPlayer();
     await mockPlatform.waitForSetAudioContext();
 
-    final perMethodList = mockPlatform.perMethodList;
-
-    expect(_getMethodStrings(perMethodList), contains('setAudioContext'));
-    final setAudioContext = _getMethodCallByList(perMethodList, 'setAudioContext');
+    expect(mockPlatform.getMethodStrings(), contains('setAudioContext'));
+    final setAudioContext = mockPlatform.findTargetMethod('setAudioContext');
 
     expect(setAudioContext.arguments['audioFocus'], equals(AndroidAudioFocus.none.value));
   });
@@ -56,14 +54,12 @@ void testRequest(MockAudioPlayersPlatform Function() getPlatform) {
     
     await mockPlatform.waitForResume();
 
-    final perMethodList = mockPlatform.perMethodList;
-
-    expect(_getMethodStrings(perMethodList), contains('setSourceUrl'));
-    final MethodCall setSourceUrlCall = _getMethodCallByList(perMethodList, 'setSourceUrl');
+    expect(mockPlatform.getMethodStrings(), contains('setSourceUrl'));
+    final MethodCall setSourceUrlCall = mockPlatform.findTargetMethod('setSourceUrl');
     final String fileUrl = setSourceUrlCall.arguments['url'];
 
     expect(fileUrl, endsWith('sounds/panel/button.mp3'));
-    expect(_getMethodStrings(perMethodList), contains('resume'));
+    expect(mockPlatform.getMethodStrings(), contains('resume'));
   });
 
   test('request, isAllow = false', () async {
@@ -75,9 +71,7 @@ void testRequest(MockAudioPlayersPlatform Function() getPlatform) {
     // 因為 resume 不會發生，沒有辦法透過等 resume 確認要等多久，暫時先用固定等待時間做驗證
     await Future.delayed(const Duration(seconds: 1));
 
-    final perMethodList = mockPlatform.perMethodList;
-
-    expect(_getMethodStrings(perMethodList), isNot(contains('setSourceUrl')));
+    expect(mockPlatform.getMethodStrings(), isNot(contains('setSourceUrl')));
   });
 
   test('request, quick double click', () async {
@@ -91,7 +85,7 @@ void testRequest(MockAudioPlayersPlatform Function() getPlatform) {
 
     final perMethodList = mockPlatform.perMethodList;
 
-    expect(_getMethodStrings(perMethodList), contains('resume'));
+    expect(mockPlatform.getMethodStrings(), contains('resume'));
     expect(perMethodList.where((c) => c.method == 'resume').length, equals(1));
   });
 
@@ -112,12 +106,4 @@ void testRequest(MockAudioPlayersPlatform Function() getPlatform) {
 
     expect(perMethodList.where((c) => c.method == 'resume').length, equals(2));
   });
-}
-
-MethodCall _getMethodCallByList(List<MethodCall> methodList, String methodName) {
-  return methodList.firstWhere( (c) => c.method == methodName);
-}
-
-List<String> _getMethodStrings(List<MethodCall> methodList) {
-  return methodList.map((c) => c.method).toList();
 }

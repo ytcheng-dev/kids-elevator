@@ -489,7 +489,7 @@ List<Animal> getInitAnimals() {
     const Animal(
       headShotImg: 'assets/images/animal_page/cat_headshot.png', 
       correctAnimate: 'assets/videos/cat_correct.mp4', 
-      errAnimate: 'assets/videos/cat_correct.mp4'),
+      errAnimate: 'assets/videos/cat_error.mp4'),
     const Animal(
       headShotImg: 'assets/images/animal_page/elephant_headshot.png', 
       correctAnimate: 'assets/videos/elephant_correct.mp4', 
@@ -498,12 +498,12 @@ List<Animal> getInitAnimals() {
     const Animal(
       headShotImg: 'assets/images/animal_page/rabbit_headshot.png', 
       correctAnimate: 'assets/videos/rabbit_correct.mp4', 
-      errAnimate: 'assets/videos/rabbit_correct.mp4'
+      errAnimate: 'assets/videos/rabbit_error.mp4'
     ),
     const Animal(
       headShotImg: 'assets/images/animal_page/giraffe_headshot.png', 
       correctAnimate: 'assets/videos/giraffe_correct.mp4', 
-      errAnimate: 'assets/videos/giraffe_correct.mp4'
+      errAnimate: 'assets/videos/giraffe_error.mp4'
     )
   ];
 }

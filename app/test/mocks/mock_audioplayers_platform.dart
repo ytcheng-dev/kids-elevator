@@ -109,4 +109,12 @@ class MockAudioPlayersPlatform {
   Future<void> waitForResume() {
     return _resumeCompleter.future.timeout(const Duration(seconds: 3));
   }
+
+  MethodCall findTargetMethod(String methodName) {
+    return perMethodList.firstWhere((c) => c.method == methodName);
+  }
+
+  List<String> getMethodStrings() {
+    return perMethodList.map((c) => c.method).toList();
+  }
 }
