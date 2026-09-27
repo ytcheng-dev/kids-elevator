@@ -42,11 +42,11 @@ App 完全在裝置上執行，不需要網路、帳號，也不記錄任何使�
 
 <table>
   <tr>
-    <td align="center"><img src="docs/assets/主選單.jpg" width="200" alt="主選單"><br>主選單</td>
-    <td align="center"><img src="docs/assets/面板模式.jpg" width="200" alt="面板模式（直式）"><br>面板模式・直式（往 4 樓移動中）</td>
+    <td align="center"><img src="docs/assets/home.jpg" width="200" alt="主選單"><br>主選單</td>
+    <td align="center"><img src="docs/assets/panel-portrait.jpg" width="200" alt="面板模式（直式）"><br>面板模式・直式（往 4 樓移動中）</td>
   </tr>
   <tr>
-    <td align="center" colspan="2"><img src="docs/assets/面板模式-橫式.jpg" width="420" alt="面板模式（橫式）"><br>面板模式・橫式</td>
+    <td align="center" colspan="2"><img src="docs/assets/panel-landscape.jpg" width="420" alt="面板模式（橫式）"><br>面板模式・橫式</td>
   </tr>
 </table>
 
@@ -54,9 +54,9 @@ App 完全在裝置上執行，不需要網路、帳號，也不記錄任何使�
 
 <table>
   <tr>
-    <td align="center"><img src="docs/assets/動物模式.jpg" width="200" alt="動物模式"><br>出題中</td>
-    <td align="center"><img src="docs/assets/動物模式-回答正確.jpg" width="200" alt="動物模式：回答正確"><br>回答正確：動物開心慶祝</td>
-    <td align="center"><img src="docs/assets/動物模式-回答錯誤.jpg" width="200" alt="動物模式：回答錯誤"><br>回答錯誤：動物哭喪臉</td>
+    <td align="center"><img src="docs/assets/animal-question.jpg" width="200" alt="動物模式"><br>出題中</td>
+    <td align="center"><img src="docs/assets/animal-correct.jpg" width="200" alt="動物模式：回答正確"><br>回答正確：動物開心慶祝</td>
+    <td align="center"><img src="docs/assets/animal-wrong.jpg" width="200" alt="動物模式：回答錯誤"><br>回答錯誤：動物哭喪臉</td>
   </tr>
 </table>
 
