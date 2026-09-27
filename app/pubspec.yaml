@@ -1,5 +1,5 @@
 name: elevator
-description: "A new Flutter project."
+description: "小小電梯大冒險：給 2～5 歲小孩練習樓層數字認知的電梯情境 App"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

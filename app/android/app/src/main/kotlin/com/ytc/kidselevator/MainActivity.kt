@@ -1,4 +1,4 @@
-package com.example.elevator
+package com.ytc.kidselevator
 
 import io.flutter.embedding.android.FlutterActivity
 
