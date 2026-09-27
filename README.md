@@ -1,5 +1,7 @@
 # 小小電梯大冒險（Kid's Elevator）
 
+<p align="center"><img src="docs/assets/icon.jpg" width="100" alt="Kid's Elevator App 圖示"></p>
+
 一款給 2～5 歲小孩練習「樓層數字認知」的電梯情境 Android App，以 Flutter 開發。畫面模擬搭電梯時看到的操作面板：小孩可以自由按樓層、聽語音播報，也可以在動物模式裡聽題目、找出對的樓層。
 
 > 這是我學習 Flutter 的練習專案。我原本的背景是 JavaScript／Node.js，開始前沒有寫過 Flutter、Dart，也沒有寫過任何自動化測試。整個專案從需求與設計文件開始，分成 26 個階段逐步完成功能與測試。
@@ -29,7 +31,7 @@ App 完全在裝置上執行，不需要網路、帳號，也不記錄任何使�
 
 - 隨機出題：語音播報「想去幾樓」（一定跟目前樓層不同），題目由隨機的動物提出
 - 每次只能選一個樓層，選定後不能取消
-- 抵達後判斷答案：答對播放動物打招呼的動畫並出下一題；答錯播放動物哭喪臉的動畫，可以再試一次
+- 抵達後判斷答案：答對播放動物慶祝的動畫並出下一題；答錯播放動物哭喪臉的動畫，可以再試一次
 - 可以重播題目語音
 
 ---
@@ -53,7 +55,7 @@ App 完全在裝置上執行，不需要網路、帳號，也不記錄任何使�
 <table>
   <tr>
     <td align="center"><img src="docs/assets/動物模式.jpg" width="200" alt="動物模式"><br>出題中</td>
-    <td align="center"><img src="docs/assets/動物模式-回答正確.jpg" width="200" alt="動物模式：回答正確"><br>回答正確：動物打招呼</td>
+    <td align="center"><img src="docs/assets/動物模式-回答正確.jpg" width="200" alt="動物模式：回答正確"><br>回答正確：動物開心慶祝</td>
     <td align="center"><img src="docs/assets/動物模式-回答錯誤.jpg" width="200" alt="動物模式：回答錯誤"><br>回答錯誤：動物哭喪臉</td>
   </tr>
 </table>
