@@ -6,7 +6,7 @@
 
 > 這是我學習 Flutter 的練習專案。我原本的背景是 JavaScript／Node.js，開始前沒有寫過 Flutter、Dart，也沒有寫過任何自動化測試。整個專案從需求與設計文件開始，分成 26 個階段逐步完成功能與測試。
 
-> **關於 AI 的使用**：學習過程中，我把 Claude 當作家教：講解觀念、用提問引導我思考、review 我寫的程式碼，但不直接提供解答。`lib/` 與 `test/` 的程式內容，是我在理解語法及原理後自行撰寫的；設計文件、學習紀錄與這份 README，則是與 Claude 討論後整理而成。各階段的學習紀錄保留在 [`docs/claudeChat/`](docs/claudeChat/)。
+> **關於 AI 的使用**：學習過程中，我把 Claude 當作家教：講解觀念、用提問引導我思考、review 我寫的程式碼，但不直接提供解答。`lib/` 與 `test/` 的程式內容，是我在理解語法及原理後自行撰寫的；設計文件、學習紀錄與這份 README，則是與 Claude 討論後整理而成。各階段的學習紀錄保留在 [`docs/claudeChat/`](docs/claudeChat/)。App 裡的動畫影片、圖片與部分語音也是用 AI 工具生成的，詳見[素材來源](#素材來源)。
 
 ---
 
@@ -142,3 +142,20 @@ elevator/
 - [video_player](https://pub.dev/packages/video_player)：動畫影片播放
 - [fake_async](https://pub.dev/packages/fake_async)（測試）：虛擬時間
 - [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)（開發）：產生 App 圖示
+
+---
+
+## 素材來源
+
+App 裡的影片、圖片、語音與音效都不是我自己繪製或錄製的。標示「AI 生成」的素材是用生成式 AI 工具產生的。
+
+| 素材 | 位置 | 來源 |
+|---|---|---|
+| 動物模式的答對／答錯動畫（AI 生成） | `app/assets/videos/` | [Google Flow](https://flow.google.com/)，提示詞見 [`docs/googleFlow/`](docs/googleFlow/) |
+| App 圖示、主選單圖片、動物大頭貼（AI 生成） | `app/assets/icon/`、`app/assets/images/` | [Stitch](https://stitch.withgoogle.com/)（Google） |
+| 動物模式的題目與樓層語音（AI 生成） | `app/assets/sounds/animal/` | [DeeVid AI](https://deevid.ai/) |
+| 面板模式的樓層、開門、關門語音 | `app/assets/sounds/panel/` 的 `floor_*`、`open_door`、`close_door` | Google 翻譯的語音，透過 [Sound of Text](https://soundoftext.com/) 產生 |
+| 按鈕音效 | `app/assets/sounds/panel/button.mp3` | [小森平「無料効果音で遊ぼう！」](https://taira-komori.net/) |
+| 到站提示音 | `app/assets/sounds/panel/ding.mp3` | [Pixabay](https://pixabay.com/sound-effects/elevator-ding-at-arenco-tower-dubai-38520/)（freesound_community） |
+
+這些素材的權利依各來源的條款為準，只用在這個 App 裡，請不要單獨取出使用或再散布。
